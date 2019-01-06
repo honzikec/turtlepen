@@ -158,6 +158,11 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
         this.svg = d3.select("#svg-container").append("svg")
             .attr("width", '100%')
             .attr("height", '100%');
+
+        // initial chart draw
+        if (this.props.config.triples) {
+            this.triplesToGraph(this.props.config.triples);
+        }
     }
 
     render() {
