@@ -7,7 +7,7 @@ body {
 body {
     background: $color__borders;
     font-size: em-calc(14);
-    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    font-family: $font-family;
 }
 
 .document, #root {

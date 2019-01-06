@@ -69,52 +69,59 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
         }
         this.svg.html('');
         // ==================== Add Marker ====================
-        this.svg.append("svg:defs");
-        this.svg.selectAll("marker")
-            .data(["end"])
-            .enter().append("svg:marker")
-            .attr("id", String)
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 30)
-            .attr("refY", -0.5)
-            .attr("markerWidth", 6)
-            .attr("markerHeight", 6)
-            .attr("orient", "auto")
-            .append("svg:polyline")
-            .attr("points", "0,-5 10,0 0,5");
+        this.svg.append('svg:defs');
+        this.svg.selectAll('marker')
+            .data(['end'])
+            .enter().append('svg:marker')
+            .attr('id', String)
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 30)
+            .attr('refY', -0.5)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('svg:polyline')
+            .attr('points', '0,-5 10,0 0,5');
 
         // ==================== Add Links ====================
-        let links = this.svg.selectAll(".link")
+        let links = this.svg.selectAll('.link')
             .data(graph.links)
             .enter()
-            .append("line")
-            .attr("marker-end", "url(#end)")
-            .attr("class", "link")
-            .attr("stroke-width", 1);
+            .append('line')
+            .attr('marker-end', 'url(#end)')
+            .attr('class', 'link')
+            .attr('id', (d, i) => d.predicate.replace(/[^\w\s]/gi, '') + '-' + i)
+            .on('mouseenter', (a, i) => this.svg && this.svg.select('#link-text-' + i).attr('class', 'chart__text chart__text--hovered'))
+            .on('mouseleave', (a, i) => this.svg && this.svg.select('#link-text-' + i).attr('class', 'chart__text'))
+            .attr('stroke-width', 1);
 
         // ==================== Add Link Names =====================
-        let linkTexts = this.svg.selectAll(".link-text")
+        let linkTexts = this.svg.selectAll('.link-text')
             .data(graph.links)
             .enter()
-            .append("text")
-            .attr("class", "link-text")
-            .text(function (d) { return d.predicate; });
+            .append('text')
+            .attr('class', 'chart__text')
+            .attr('id', (d, i) => 'link-text-' + i)
+            .text(d => d.predicate);
 
         // ==================== Add Link Names =====================
-        let nodeTexts = this.svg.selectAll(".node-text")
+        let nodeTexts = this.svg.selectAll('.node-text')
             .data(graph.nodes)
             .enter()
-            .append("text")
-            .attr("class", "node-text")
-            .text(function (d) { return d.label; });
+            .append('text')
+            .attr('class', 'chart__text')
+            .attr('id', (d, i) => 'node-text-' + i)
+            .text(d => d.label);
 
         // ==================== Add Node =====================
-        let nodes = this.svg.selectAll(".node")
+        let nodes = this.svg.selectAll('.node')
             .data(graph.nodes)
             .enter()
-            .append("circle")
-            .attr("class", "node")
-            .attr("r", 10);
+            .append('circle')
+            .attr('class', 'node')
+            .on('mouseenter', (a, i) => this.svg && this.svg.select('#node-text-' + i).attr('class', 'chart__text chart__text--hovered'))
+            .on('mouseleave', (a, i) => this.svg && this.svg.select('#node-text-' + i).attr('class', 'chart__text'))
+            .attr('r', 10);
 
         let centerTop = this._chartElement && this._chartElement.current ? this._chartElement.current.clientWidth / 2 : 400;
         let centerLeft = this._chartElement && this._chartElement.current ? this._chartElement.current.clientHeight / 2 : 300;
@@ -122,29 +129,29 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
         let force = d3
             .forceSimulation()
             .nodes(graph.nodes)
-            .force("link", d3.forceLink())
-            .force("charge", d3.forceManyBody().strength(-30))
-            .force("center", d3.forceCenter(centerTop, centerLeft));
+            .force('link', d3.forceLink())
+            .force('charge', d3.forceManyBody().strength(-30))
+            .force('center', d3.forceCenter(centerTop, centerLeft));
 
         // ==================== Force ====================
-        force.on("tick", function () {
+        force.on('tick', function () {
             nodes
-                .attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; });
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
 
             links
-                .attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; });
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
 
             nodeTexts
-                .attr("x", function (d) { return d.x + 12; })
-                .attr("y", function (d) { return d.y + 3; });
+                .attr('x', d => d.x + 12)
+                .attr('y', d => d.y + 3);
 
             linkTexts
-                .attr("x", function (d) { return 4 + (d.source.x + d.target.x) / 2; })
-                .attr("y", function (d) { return 4 + (d.source.y + d.target.y) / 2; });
+                .attr('x', d => 4 + (d.source.x + d.target.x) / 2)
+                .attr('y', d => 4 + (d.source.y + d.target.y) / 2);
         });
     }
 
@@ -155,9 +162,9 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
     }
 
     componentDidMount() {
-        this.svg = d3.select("#svg-container").append("svg")
-            .attr("width", '100%')
-            .attr("height", '100%');
+        this.svg = d3.select('#svg-container').append('svg')
+            .attr('width', '100%')
+            .attr('height', '100%');
 
         // initial chart draw
         if (this.props.config.triples) {
