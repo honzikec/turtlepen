@@ -1,0 +1,16 @@
+html,
+body {
+    position: relative;
+    height: 100%;
+}
+
+body {
+    background: #232323;
+    font-size: em-calc(14);
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+}
+
+.document, #root {
+    height: 100%;
+    position: relative;
+}

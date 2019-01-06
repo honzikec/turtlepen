@@ -1,0 +1,95 @@
+import React, { Component } from 'react';
+import AceEditor from 'react-ace';
+import * as n3 from 'n3';
+
+import TurtleEditorMode from '../utils/TurtleEditorMode';
+
+import { N3Error } from '../models/N3Error.model';
+import { EditorChangeProps } from '../models/EditorChangeProps.model';
+import { EditorState } from '../models/EditorState.model';
+
+import 'brace/mode/xml';
+import 'brace/theme/twilight';
+import 'brace/ext/searchbox';
+
+// tmp
+import { initialValue } from '../models/tmpValue';
+
+export class Editor extends Component<EditorChangeProps, EditorState> {
+    private _aceEditor: React.RefObject<any>;
+
+    constructor(props: any) {
+        super(props);
+        this._aceEditor = React.createRef();
+        this.state = {
+            value: initialValue
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    private parse(): Promise<Array<n3.Quad>> {
+        return new Promise((resolve, reject) => {
+            let parser = n3.Parser({ format: 'text/turtle' });
+            let triples: Array<n3.Quad> = [];
+            let editor = this._aceEditor.current.editor.getSession();
+            editor.clearAnnotations();
+            parser.parse(this.state.value, (error: N3Error, triple: n3.Quad, prefixes: n3.Prefixes) => {
+                if (error) {
+                    this.setState({ error: error });
+                    editor.setAnnotations([{
+                        row: error.context ? error.context.line - 1 : 1,
+                        text: error.message,
+                        type: 'error'
+                    }]);
+                } else if (triple) {
+                    triples.push(triple);
+                }
+                resolve(triples);
+            })
+        });
+    }
+
+    public componentDidMount(): void {
+        const customMode = new TurtleEditorMode();
+        if (this._aceEditor.current) {
+            this._aceEditor.current.editor.getSession().setMode(customMode);
+            this.validate();
+        }
+    }
+
+
+    public validate(): void {
+        this.setState({ error: undefined });
+        this.parse().then((triples: Array<n3.Quad>) => {
+            this.setState({ triples: triples });
+            this.props.onEditorChanged(this.state);
+        });
+    }
+
+    public handleChange(value: string, event: any): void {
+        this.setState({ value: value });
+        this.validate();
+    }
+
+    public render(): JSX.Element {
+        return (
+            <div className="editor">
+                {/* <p>{this.state.error && this.state.error.message}</p> */}
+                <AceEditor
+                    ref={this._aceEditor}
+                    mode="text"
+                    theme="twilight"
+                    height="100%"
+                    width="100%"
+                    className="editor__window"
+                    onChange={this.handleChange}
+                    name="turtle-editor"
+                    editorProps={{ $blockScrolling: true }}
+                    value={this.state.value}
+                />
+            </div>
+        );
+    }
+}

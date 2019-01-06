@@ -100,7 +100,7 @@ export class CustomHighlightRules extends ace.acequire(
     }
 }
 
-export default class CustomSqlMode extends ace.acequire("ace/mode/text")
+export default class TurtleEditorMode extends ace.acequire("ace/mode/text")
     .Mode {
     constructor() {
         super();

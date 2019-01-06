@@ -12,7 +12,7 @@ export class Chart extends Component<{ triples?: Array<n3.Quad> }, { graph?: IGr
 
     private svg: d3.Selection<SVGSVGElement, {}, HTMLElement, any> | null = null;
 
-    private findNode(graph: IGraph, id: string) {
+    private findNode(graph: IGraph, id: string): any {
         return graph.nodes.find(n => n.id === id);
     }
 
@@ -133,7 +133,6 @@ export class Chart extends Component<{ triples?: Array<n3.Quad> }, { graph?: IGr
     }
 
     componentWillReceiveProps(nextProps: { triples?: Array<n3.Quad> }) {
-        console.log('receiving triples...');
         if (nextProps.triples) {
             this.triplesToGraph(nextProps.triples);
         }
