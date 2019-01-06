@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import * as n3 from 'n3';
 import * as d3 from 'd3';
 import { N3Error } from '../models/N3Error.model';
@@ -10,6 +10,12 @@ export interface Graph {
 }
 
 export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error?: N3Error } }, { graph?: Graph, error?: N3Error }> {
+    private _chartElement: RefObject<HTMLDivElement>;
+
+    constructor(props: any) {
+        super(props);
+        this._chartElement = React.createRef()
+    }
 
     // initial state before we get some from the App component
     public state: { graph?: Graph, error?: N3Error } = { graph: { nodes: [], links: [] } };
@@ -22,7 +28,7 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
 
     triplesToGraph(triples: Array<n3.Quad>): void {
 
-        if (this.state.error) {
+        if (this.props.config.error) {
             console.error('has error...');
             return;
         }
@@ -53,14 +59,12 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             graph.links.push({ source: subjNode, target: objNode, predicate: predicate.id, weight: 1 });
         });
 
-        this.setState({ graph: graph }, () => {
-            this.setChart();
-        });
+        this.setChart(graph);
 
     }
 
-    setChart() {
-        if (this.svg === null || !this.state || !this.state.graph) {
+    setChart(graph: Graph) {
+        if (this.svg === null) {
             return;
         }
         this.svg.html('');
@@ -81,7 +85,7 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
 
         // ==================== Add Links ====================
         let links = this.svg.selectAll(".link")
-            .data(this.state.graph.links)
+            .data(graph.links)
             .enter()
             .append("line")
             .attr("marker-end", "url(#end)")
@@ -90,7 +94,7 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
 
         // ==================== Add Link Names =====================
         let linkTexts = this.svg.selectAll(".link-text")
-            .data(this.state.graph.links)
+            .data(graph.links)
             .enter()
             .append("text")
             .attr("class", "link-text")
@@ -98,7 +102,7 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
 
         // ==================== Add Link Names =====================
         let nodeTexts = this.svg.selectAll(".node-text")
-            .data(this.state.graph.nodes)
+            .data(graph.nodes)
             .enter()
             .append("text")
             .attr("class", "node-text")
@@ -106,18 +110,21 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
 
         // ==================== Add Node =====================
         let nodes = this.svg.selectAll(".node")
-            .data(this.state.graph.nodes)
+            .data(graph.nodes)
             .enter()
             .append("circle")
             .attr("class", "node")
             .attr("r", 10);
 
+        let centerTop = this._chartElement && this._chartElement.current ? this._chartElement.current.clientWidth / 2 : 400;
+        let centerLeft = this._chartElement && this._chartElement.current ? this._chartElement.current.clientHeight / 2 : 300;
+
         let force = d3
             .forceSimulation()
-            .nodes(this.state.graph.nodes)
+            .nodes(graph.nodes)
             .force("link", d3.forceLink())
-            .force("charge", d3.forceManyBody().strength(-5))
-            .force("center", d3.forceCenter(800 / 2, 600 / 2));
+            .force("charge", d3.forceManyBody().strength(-30))
+            .force("center", d3.forceCenter(centerTop, centerLeft));
 
         // ==================== Force ====================
         force.on("tick", function () {
@@ -141,24 +148,21 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
         });
     }
 
-    componentWillReceiveProps(nextProps: { config: { triples: Array<n3.Quad>, error?: N3Error } }) {
+    componentDidUpdate(nextProps: { config: { triples: Array<n3.Quad>, error?: N3Error } }) {
         if (nextProps.config) {
-            this.setState({ error: nextProps.config.error }, () => {
-                this.triplesToGraph(nextProps.config.triples);
-            });
+            this.triplesToGraph(nextProps.config.triples);
         }
     }
 
     componentDidMount() {
         this.svg = d3.select("#svg-container").append("svg")
-            .attr("width", 800)
-            .attr("height", 600);
+            .attr("width", '100%')
+            .attr("height", '100%');
     }
 
     render() {
         return (
-            <div className="chart">
-                <div id="svg-container"></div>
+            <div className="chart" id="svg-container" ref={this._chartElement}>
             </div>
         );
     }

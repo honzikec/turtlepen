@@ -51,6 +51,14 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         });
     }
 
+    private triggerResize(): void {
+        this._aceEditor.current.editor.resize();
+    }
+
+    public componentDidUpdate(props: EditorChangeProps) {
+        this.triggerResize();
+    }
+
     public componentDidMount(): void {
         const customMode = new TurtleEditorMode();
         if (this._aceEditor.current) {
@@ -58,7 +66,6 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
             this.validate();
         }
     }
-
 
     public validate(): void {
         this.setState({ error: undefined });

@@ -1,7 +1,11 @@
 .chart {
     background: $color__header;
     height: calc(100% - 5em);
-    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: calc(100% - 5em);
+    border: 1em solid $color__borders;
 }
 
 .node {
@@ -29,8 +33,4 @@ marker {
 .link-text {
     font: 9px sans-serif;
     fill: grey;
-}
-
-svg {
-    border: 1px solid white;
 }
