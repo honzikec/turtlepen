@@ -5,7 +5,9 @@
     overflow: hidden;
     box-sizing: border-box;
     height: calc(100% - 5em);
-    border: 1em solid $color__borders;
+    border-top: 1em solid $color__borders;
+    border-bottom: 1em solid $color__borders;
+    border-right: 1em solid $color__borders;
 }
 
 .node {
@@ -27,7 +29,7 @@ marker {
 
 .node-text {
     font: 11px sans-serif;
-    fill: black;
+    fill: white;
 }
 
 .link-text {
