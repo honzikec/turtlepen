@@ -1,25 +1,34 @@
 import React, { Component } from 'react';
 import * as n3 from 'n3';
 import * as d3 from 'd3';
+import { N3Error } from '../models/N3Error.model';
 
 
-export interface IGraph {
+export interface Graph {
     nodes: Array<any>;
     links: Array<any>;
 }
 
-export class Chart extends Component<{ triples?: Array<n3.Quad> }, { graph?: IGraph }> {
+export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error?: N3Error } }, { graph?: Graph, error?: N3Error }> {
+
+    // initial state before we get some from the App component
+    public state: { graph?: Graph, error?: N3Error } = { graph: { nodes: [], links: [] } };
 
     private svg: d3.Selection<SVGSVGElement, {}, HTMLElement, any> | null = null;
 
-    private findNode(graph: IGraph, id: string): any {
+    private findNode(graph: Graph, id: string): any {
         return graph.nodes.find(n => n.id === id);
     }
 
     triplesToGraph(triples: Array<n3.Quad>): void {
 
+        if (this.state.error) {
+            console.error('has error...');
+            return;
+        }
+
         //Graph
-        let graph: IGraph = { nodes: [], links: [] };
+        let graph: Graph = { nodes: [], links: [] };
 
         //Initial Graph from triples
         triples.forEach((triple) => {
@@ -132,9 +141,11 @@ export class Chart extends Component<{ triples?: Array<n3.Quad> }, { graph?: IGr
         });
     }
 
-    componentWillReceiveProps(nextProps: { triples?: Array<n3.Quad> }) {
-        if (nextProps.triples) {
-            this.triplesToGraph(nextProps.triples);
+    componentWillReceiveProps(nextProps: { config: { triples: Array<n3.Quad>, error?: N3Error } }) {
+        if (nextProps.config) {
+            this.setState({ error: nextProps.config.error }, () => {
+                this.triplesToGraph(nextProps.config.triples);
+            });
         }
     }
 
@@ -146,7 +157,9 @@ export class Chart extends Component<{ triples?: Array<n3.Quad> }, { graph?: IGr
 
     render() {
         return (
-            <div id="svg-container"></div>
+            <div className="chart">
+                <div id="svg-container"></div>
+            </div>
         );
     }
 }

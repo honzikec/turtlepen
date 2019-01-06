@@ -74,8 +74,9 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
     }
 
     public render(): JSX.Element {
+        let editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
-            <div className="editor">
+            <div className={editorClassName}>
                 {/* <p>{this.state.error && this.state.error.message}</p> */}
                 <AceEditor
                     ref={this._aceEditor}

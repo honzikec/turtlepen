@@ -1,3 +1,9 @@
+.chart {
+    background: $color__header;
+    height: calc(100% - 5em);
+    width: 100%;
+}
+
 .node {
     stroke: #fff;
     fill: #ddd;
@@ -26,5 +32,5 @@ marker {
 }
 
 svg {
-    border: 1px solid black;
+    border: 1px solid white;
 }
