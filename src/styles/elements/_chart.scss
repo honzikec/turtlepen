@@ -9,6 +9,7 @@
     border-bottom: 1em solid $color__borders;
     border-right: 1em solid $color__borders;
     &__text {
+        transition: .3s ease-out;
         font-size: 1em;
         font-family: $font-family;
         fill: white;
@@ -31,7 +32,13 @@
 .link {
     stroke: #999;
     stroke-opacity: .6;
-    stroke-width: 1px;
+    stroke-width: 2px;
+    transition: .3s ease-out;
+    &:hover {
+        stroke: greenyellow;
+        stroke-opacity: 1;
+        stroke-width: 2px;
+    }
 }
 
 marker {

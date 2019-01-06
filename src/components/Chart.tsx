@@ -75,13 +75,13 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             .enter().append('svg:marker')
             .attr('id', String)
             .attr('viewBox', '0 -5 10 10')
-            .attr('refX', 30)
-            .attr('refY', -0.5)
-            .attr('markerWidth', 6)
-            .attr('markerHeight', 6)
+            .attr('refX', 13)
+            .attr('refY', 0)
+            .attr('markerWidth', 8)
+            .attr('markerHeight', 8)
             .attr('orient', 'auto')
             .append('svg:polyline')
-            .attr('points', '0,-5 10,0 0,5');
+            .attr('points', '0,-5 5,0 0,5');
 
         // ==================== Add Links ====================
         let links = this.svg.selectAll('.link')
@@ -90,10 +90,9 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             .append('line')
             .attr('marker-end', 'url(#end)')
             .attr('class', 'link')
-            .attr('id', (d, i) => d.predicate.replace(/[^\w\s]/gi, '') + '-' + i)
             .on('mouseenter', (a, i) => this.svg && this.svg.select('#link-text-' + i).attr('class', 'chart__text chart__text--hovered'))
             .on('mouseleave', (a, i) => this.svg && this.svg.select('#link-text-' + i).attr('class', 'chart__text'))
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 2);
 
         // ==================== Add Link Names =====================
         let linkTexts = this.svg.selectAll('.link-text')
