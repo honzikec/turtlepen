@@ -12,8 +12,10 @@
         transition: .3s ease-out;
         font-size: 1em;
         font-family: $font-family;
-        fill: white;
+        fill: greenyellow;
         display: none;
+        transform-origin: center; 
+        text-shadow: 0 0 10px darken(greenyellow, 30%);
         &--hover {
             display: block;
         }
@@ -27,30 +29,21 @@
             fill: greenyellow;
         }
     }
-}
-
-.node {
-    stroke: #fff;
-    fill: #ddd;
-    stroke-width: 1.5px;
-    &:hover {
-        fill: greenyellow;
-    }
-}
-
-.link {
-    stroke: #999;
-    stroke-opacity: .6;
-    stroke-width: 2px;
-    transition: .3s ease-out;
-    &:hover {
-        stroke: greenyellow;
-        stroke-opacity: 1;
+    &__link {
+        stroke: #999;
+        stroke-opacity: .6;
         stroke-width: 2px;
+        transition: .3s ease-out;
+        &:hover, &--hover {
+            stroke: greenyellow;
+            stroke-opacity: 1;
+            stroke-width: 2px;
+        }
     }
-}
-
-marker {
-    stroke: #999;
-    fill: rgba(124, 240, 10, 0);
+    &__node {
+        fill: #ddd;
+        &:hover {
+            fill: greenyellow;
+        }
+    }
 }

@@ -82,30 +82,13 @@ export class Chart extends Component<
         // ==================== Add Marker ====================
         this._svg.append('svg:defs');
 
-        // ==================== Add Link Names =====================
-        const linkTexts = this._svg.selectAll('.link-text')
-            .data(graph.links)
-            .enter()
-            .append('text')
-            .attr('class', 'chart__text')
-            .attr('id', (d, i) => 'link-text-' + i)
-            .text(d => d.predicate);
-
-        // ==================== Add Link Names =====================
-        const nodeTexts = this._svg.selectAll('.node-text')
-            .data(graph.nodes)
-            .enter()
-            .append('text')
-            .attr('class', 'chart__text')
-            .attr('id', (d, i) => 'node-text-' + i)
-            .text(d => d.label);
-
         // ==================== Add Links ====================
-        const links = this._svg.selectAll('.link')
+        const links = this._svg.selectAll('.chart__link')
             .data(graph.links)
             .enter()
             .append('line')
-            .attr('class', 'link')
+            .attr('class', 'chart__link')
+            .attr('id', (d, i) => 'link-' + i)
             .on('mouseenter', (a, i) => {
                 if (this._svg) {
                     this._svg.select('#link-text-' + i)
@@ -125,11 +108,11 @@ export class Chart extends Component<
             .attr('stroke-width', 2);
 
         // ==================== Add Node =====================
-        const nodes = this._svg.selectAll('.node')
+        const nodes = this._svg.selectAll('.chart__node')
             .data(graph.nodes)
             .enter()
             .append('circle')
-            .attr('class', 'node')
+            .attr('class', 'chart__node')
             .on('mouseenter', (a, i) => this._svg && this._svg.select('#node-text-' + i)
                 .attr('class', 'chart__text chart__text--hover'))
             .on('mouseleave', (a, i) => this._svg && this._svg.select('#node-text-' + i)
@@ -143,6 +126,30 @@ export class Chart extends Component<
             .append('polygon')
             .attr('class', 'chart__arrow')
             .attr('id', (d, i) => 'link-arrow-' + i);
+
+        // ==================== Add Link Names =====================
+        const linkTexts = this._svg.selectAll('.link-text')
+            .data(graph.links)
+            .enter()
+            .append('text')
+            .attr('class', 'chart__text')
+            .attr('id', (d, i) => 'link-text-' + i)
+            .on('mouseenter', (a, i) => this._svg && this._svg.select('#link-text-' + i)
+                .attr('class', 'chart__text chart__text--hover') && this._svg.select('#link-' + i)
+                    .attr('class', 'chart__link chart__link--hover'))
+            .on('mouseleave', (a, i) =>this._svg && this._svg.select('#link-text-' + i)
+            .attr('class', 'chart__text') && this._svg.select('#link-' + i)
+                .attr('class', 'chart__link'))
+            .text(d => d.predicate);
+
+        // ==================== Add Node Names =====================
+        const nodeTexts = this._svg.selectAll('.node-text')
+            .data(graph.nodes)
+            .enter()
+            .append('text')
+            .attr('class', 'chart__text')
+            .attr('id', (d, i) => 'node-text-' + i)
+            .text(d => d.label);
 
         const centerTop = this._chartElement
             && this._chartElement.current ? this._chartElement.current.clientWidth / 2 : 400;
@@ -162,32 +169,32 @@ export class Chart extends Component<
                 .attr('cx', d => d.x)
                 .attr('cy', d => d.y);
 
-            links
-                .attr('x1', d => d.source.x)
-                .attr('y1', d => d.source.y)
-                .attr('x2', d => d.target.x)
-                .attr('y2', d => d.target.y);
-
             arrows
                 .attr('points', '-5,0 0,5 0,-5')
                 .attr('style', d => {
                     // some trigonometry magic to position and rotate stuff (TODO: refactor!)
                     const angle = this.angle(d.target.x, d.target.y, d.source.x, d.source.y);
                     const angleDeg = angle * 180 / Math.PI;
-                    const plusX = Math.cos(angle) * 17;
-                    const plusY = Math.sin(angle) * 17;
+                    const plusX = Math.cos(angle) * 16;
+                    const plusY = Math.sin(angle) * 16;
                     let style = 'transform: translate(' + (d.target.x + plusX) + 'px, ' + (d.target.y + plusY) + 'px) ';
                     style += 'rotate(' + angleDeg + 'deg);';
                     return style;
                 });
 
             nodeTexts
-                .attr('x', d => d.x + 12)
-                .attr('y', d => d.y + 3);
+                .attr('x', d => d.x + 20)
+                .attr('y', d => d.y + 5);
 
             linkTexts
-                .attr('x', d => 4 + (d.source.x + d.target.x) / 2)
-                .attr('y', d => 4 + (d.source.y + d.target.y) / 2);
+                .attr('x', d => 8 + (d.source.x + d.target.x) / 2)
+                .attr('y', d => 8 + (d.source.y + d.target.y) / 2);
+
+            links
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
         });
     }
 
