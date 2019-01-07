@@ -14,8 +14,17 @@
         font-family: $font-family;
         fill: white;
         display: none;
-        &--hovered {
+        &--hover {
             display: block;
+        }
+    }
+    &__arrow {
+        fill: #999;
+        fill-opacity: .3s;
+        transition: fill-opacity .3s ease-out, opacity .3 ease-out;
+        &--hover {
+            fill-opacity: 1;
+            fill: greenyellow;
         }
     }
 }

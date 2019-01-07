@@ -30,6 +30,14 @@ export class Chart extends Component<
         return graph.nodes.find(n => n.id === id);
     }
 
+
+    private angle(cx: number, cy: number, ex: number, ey: number): number {
+        var dy = ey - cy;
+        var dx = ex - cx;
+        var theta = Math.atan2(dy, dx);
+        return theta;
+    }
+
     public triplesToGraph(triples: Array<n3.Quad>): void {
 
         if (this.props.config.error) {
@@ -73,29 +81,6 @@ export class Chart extends Component<
         this._svg.html('');
         // ==================== Add Marker ====================
         this._svg.append('svg:defs');
-        this._svg.selectAll('link-endings')
-            .data(['end'])
-            .append('svg:polyline')
-            .attr('points', '0,-5 5,0 0,5');
-
-        // ==================== Add Links ====================
-        const links = this._svg.selectAll('.link')
-            .data(graph.links)
-            .enter()
-            .append('line')
-            .attr('class', 'link')
-            .on('mouseenter', (a, i) => this._svg && this._svg.select('#link-text-' + i)
-                .attr('class', 'chart__text chart__text--hovered'))
-            .on('mouseleave', (a, i) => this._svg && this._svg.select('#link-text-' + i)
-                .attr('class', 'chart__text'))
-            .attr('stroke-width', 2);
-
-        // ==================== Add Arrows ====================
-        const arrows = this._svg.selectAll('.arrow')
-            .data(graph.links)
-            .enter()
-            .append('polygon')
-            .attr('fill', 'blue');
 
         // ==================== Add Link Names =====================
         const linkTexts = this._svg.selectAll('.link-text')
@@ -115,6 +100,30 @@ export class Chart extends Component<
             .attr('id', (d, i) => 'node-text-' + i)
             .text(d => d.label);
 
+        // ==================== Add Links ====================
+        const links = this._svg.selectAll('.link')
+            .data(graph.links)
+            .enter()
+            .append('line')
+            .attr('class', 'link')
+            .on('mouseenter', (a, i) => {
+                if (this._svg) {
+                    this._svg.select('#link-text-' + i)
+                        .attr('class', 'chart__text chart__text--hover');
+                    this._svg.select('#link-arrow-' + i)
+                        .attr('class', 'chart__arrow chart__arrow--hover');
+                }
+            })
+            .on('mouseleave', (a, i) => {
+                if (this._svg) {
+                    this._svg.select('#link-text-' + i)
+                        .attr('class', 'chart__text');
+                    this._svg.select('#link-arrow-' + i)
+                        .attr('class', 'chart__arrow');
+                }
+            })
+            .attr('stroke-width', 2);
+
         // ==================== Add Node =====================
         const nodes = this._svg.selectAll('.node')
             .data(graph.nodes)
@@ -122,10 +131,18 @@ export class Chart extends Component<
             .append('circle')
             .attr('class', 'node')
             .on('mouseenter', (a, i) => this._svg && this._svg.select('#node-text-' + i)
-                .attr('class', 'chart__text chart__text--hovered'))
+                .attr('class', 'chart__text chart__text--hover'))
             .on('mouseleave', (a, i) => this._svg && this._svg.select('#node-text-' + i)
                 .attr('class', 'chart__text'))
             .attr('r', 10);
+
+        // ==================== Add Arrows ====================
+        const arrows = this._svg.selectAll('.arrow')
+            .data(graph.links)
+            .enter()
+            .append('polygon')
+            .attr('class', 'chart__arrow')
+            .attr('id', (d, i) => 'link-arrow-' + i);
 
         const centerTop = this._chartElement
             && this._chartElement.current ? this._chartElement.current.clientWidth / 2 : 400;
@@ -152,13 +169,17 @@ export class Chart extends Component<
                 .attr('y2', d => d.target.y);
 
             arrows
-                .attr('points',
-                    d => {
-                        return d.target.x + ',' + (d.target.y) + ' '
-                            + d.target.x + 20 + ',' + (d.target.y + 20) + ' '
-                            + (d.target.x - 20) + ',' + (d.target.y - 20);
-                    }
-                );
+                .attr('points', '-5,0 0,5 0,-5')
+                .attr('style', d => {
+                    // some trigonometry magic to position and rotate stuff (TODO: refactor!)
+                    const angle = this.angle(d.target.x, d.target.y, d.source.x, d.source.y);
+                    const angleDeg = angle * 180 / Math.PI;
+                    const plusX = Math.cos(angle) * 17;
+                    const plusY = Math.sin(angle) * 17;
+                    let style = 'transform: translate(' + (d.target.x + plusX) + 'px, ' + (d.target.y + plusY) + 'px) ';
+                    style += 'rotate(' + angleDeg + 'deg);';
+                    return style;
+                });
 
             nodeTexts
                 .attr('x', d => d.x + 12)
