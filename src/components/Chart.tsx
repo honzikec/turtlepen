@@ -26,18 +26,6 @@ export class Chart extends Component<
         this._chartElement = React.createRef();
     }
 
-    private findNode(graph: Graph, id: string): any {
-        return graph.nodes.find(n => n.id === id);
-    }
-
-
-    private angle(cx: number, cy: number, ex: number, ey: number): number {
-        var dy = ey - cy;
-        var dx = ex - cx;
-        var theta = Math.atan2(dy, dx);
-        return theta;
-    }
-
     public triplesToGraph(triples: Array<n3.Quad>): void {
 
         if (this.props.config.error) {
@@ -137,9 +125,9 @@ export class Chart extends Component<
             .on('mouseenter', (a, i) => this._svg && this._svg.select('#link-text-' + i)
                 .attr('class', 'chart__text chart__text--hover') && this._svg.select('#link-' + i)
                     .attr('class', 'chart__link chart__link--hover'))
-            .on('mouseleave', (a, i) =>this._svg && this._svg.select('#link-text-' + i)
-            .attr('class', 'chart__text') && this._svg.select('#link-' + i)
-                .attr('class', 'chart__link'))
+            .on('mouseleave', (a, i) => this._svg && this._svg.select('#link-text-' + i)
+                .attr('class', 'chart__text') && this._svg.select('#link-' + i)
+                    .attr('class', 'chart__link'))
             .text(d => d.predicate);
 
         // ==================== Add Node Names =====================
@@ -220,5 +208,16 @@ export class Chart extends Component<
             <div className='chart' id='svg-container' ref={this._chartElement}>
             </div>
         );
+    }
+
+    private findNode(graph: Graph, id: string): any {
+        return graph.nodes.find(n => n.id === id);
+    }
+
+    private angle(cx: number, cy: number, ex: number, ey: number): number {
+        const dy = ey - cy;
+        const dx = ex - cx;
+        const theta = Math.atan2(dy, dx);
+        return theta;
     }
 }

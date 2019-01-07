@@ -9,7 +9,6 @@
       true,
       2
     ],
-    "no-default-export": true,
     "restrict-plus-operands": true,
     "strict-boolean-expressions": true,
     "prefer-const": true,
@@ -58,6 +57,7 @@
       }
     ],
     "ordered-imports": false,
-    "no-default-export": false
+    "no-default-export": false,
+    "no-submodule-imports": false
   }
 }
