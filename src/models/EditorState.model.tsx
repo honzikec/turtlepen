@@ -1,4 +1,6 @@
-import { N3Error } from "./N3Error.model";
+/* Copyright 2018 Jan Kaiser */
+
+import { N3Error } from './N3Error.model';
 import * as n3 from 'n3';
 
 export interface EditorState {

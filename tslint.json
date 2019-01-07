@@ -1,0 +1,63 @@
+{
+  "extends": "tslint:latest",
+  "rules": {
+    "file-header": [
+      true,
+      "Copyright \\d{4} Jan Kaiser"
+    ],
+    "max-classes-per-file": [
+      true,
+      2
+    ],
+    "no-default-export": true,
+    "restrict-plus-operands": true,
+    "strict-boolean-expressions": true,
+    "prefer-const": true,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "array-type": [
+      true,
+      "generic"
+    ],
+    "arrow-parens": [
+      true,
+      "ban-single-arg-parens"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "never",
+        "singleline": "never"
+      }
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    "no-console": [
+      false,
+      ""
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "static-field",
+          "instance-field",
+          "static-method",
+          "instance-method"
+        ]
+      }
+    ],
+    "ordered-imports": false,
+    "no-default-export": false
+  }
+}

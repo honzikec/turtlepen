@@ -1,19 +1,21 @@
+/* Copyright 2018 Jan Kaiser */
+
 import React, { Component } from 'react';
 import AceEditor from 'react-ace';
 import * as n3 from 'n3';
 
-import TurtleEditorMode from '../utils/TurtleEditorMode';
+import { TurtleEditorMode } from './../utils/TurtleEditorMode';
 
 import { N3Error } from '../models/N3Error.model';
 import { EditorChangeProps } from '../models/EditorChangeProps.model';
-import { EditorState } from '../models/EditorState.model';
+import { EditorState } from './../models/EditorState.model';
 
 import 'brace/mode/xml';
 import 'brace/theme/twilight';
 import 'brace/ext/searchbox';
 
 // tmp
-import { initialValue } from '../models/tmpValue';
+import { initialValue } from './../models/tmpValue';
 
 export class Editor extends Component<EditorChangeProps, EditorState> {
     private _aceEditor: React.RefObject<any>;
@@ -31,13 +33,13 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
     private parse(): Promise<Array<n3.Quad>> {
         return new Promise((resolve, reject) => {
-            let parser = n3.Parser({ format: 'text/turtle' });
-            let triples: Array<n3.Quad> = [];
-            let editor = this._aceEditor.current.editor.getSession();
+            const parser = n3.Parser({ format: 'text/turtle' });
+            const triples: Array<n3.Quad> = [];
+            const editor = this._aceEditor.current.editor.getSession();
             editor.clearAnnotations();
             parser.parse(this.state.value, (error: N3Error, triple: n3.Quad, prefixes: n3.Prefixes) => {
                 if (error) {
-                    this.setState({ error: error });
+                    this.setState({ error });
                     editor.setAnnotations([{
                         row: error.context ? error.context.line - 1 : 1,
                         text: error.message,
@@ -47,7 +49,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
                     triples.push(triple);
                 }
                 resolve(triples);
-            })
+            });
         });
     }
 
@@ -70,30 +72,30 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
     public validate(): void {
         this.setState({ error: undefined });
         this.parse().then((triples: Array<n3.Quad>) => {
-            this.setState({ triples: triples });
+            this.setState({ triples });
             this.props.onEditorChanged(this.state);
         });
     }
 
     public handleChange(value: string, event: any): void {
-        this.setState({ value: value });
+        this.setState({ value });
         this.validate();
     }
 
     public render(): JSX.Element {
-        let editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
+        const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
             <div className={editorClassName}>
                 {/* <p>{this.state.error && this.state.error.message}</p> */}
                 <AceEditor
                     ref={this._aceEditor}
-                    mode="text"
-                    theme="twilight"
-                    height="100%"
-                    width="100%"
-                    className="editor__window"
+                    mode='text'
+                    theme='twilight'
+                    height='100%'
+                    width='100%'
+                    className='editor__window'
                     onChange={this.handleChange}
-                    name="turtle-editor"
+                    name='turtle-editor'
                     editorProps={{ $blockScrolling: true }}
                     value={this.state.value}
                 />

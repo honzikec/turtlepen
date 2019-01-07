@@ -1,3 +1,5 @@
+/* Copyright 2018 Jan Kaiser */
+
 import React, { Component } from 'react';
 import './App.scss';
 
@@ -29,10 +31,10 @@ class App extends Component<{}, AppState> {
     this.setState({ showChart: !this.state.showChart });
   }
 
-  render() {
+  public render(): JSX.Element {
     let chartComponent: JSX.Element = <React.Fragment />;
     if (this.state) {
-      let chartConfig = { triples: this.state.triples, error: this.state.error };
+      const chartConfig = { triples: this.state.triples, error: this.state.error };
       chartComponent = this.state.showChart ? <Chart config={chartConfig} /> : <React.Fragment />;
     }
     return (

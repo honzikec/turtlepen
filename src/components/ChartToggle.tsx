@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+/* Copyright 2018 Jan Kaiser */
 
+import React, { Component } from 'react';
 
 export class ChartToggle extends Component<{ open: boolean, onChartToggled: () => void }, {}> {
 
@@ -15,7 +16,7 @@ export class ChartToggle extends Component<{ open: boolean, onChartToggled: () =
 
     public render(): JSX.Element {
         return (
-            <a className="chart-toggle" onClick={this.onChartToggle}></a>
+            <a className='chart-toggle' onClick={this.onChartToggle}></a>
         );
     }
 }

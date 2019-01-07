@@ -1,46 +1,50 @@
+/* Copyright 2018 Jan Kaiser */
+
 import React, { Component, RefObject } from 'react';
 import * as n3 from 'n3';
 import * as d3 from 'd3';
 import { N3Error } from '../models/N3Error.model';
-
 
 export interface Graph {
     nodes: Array<any>;
     links: Array<any>;
 }
 
-export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error?: N3Error } }, { graph?: Graph, error?: N3Error }> {
-    private _chartElement: RefObject<HTMLDivElement>;
+export class Chart extends Component<
+    { config: { triples?: Array<n3.Quad>, error?: N3Error } },
+    { graph?: Graph, error?: N3Error }
+    > {
 
-    constructor(props: any) {
-        super(props);
-        this._chartElement = React.createRef()
-    }
+    private _chartElement: RefObject<HTMLDivElement>;
+    private _svg: d3.Selection<SVGSVGElement, {}, HTMLElement, any> | null = null;
 
     // initial state before we get some from the App component
     public state: { graph?: Graph, error?: N3Error } = { graph: { nodes: [], links: [] } };
 
-    private svg: d3.Selection<SVGSVGElement, {}, HTMLElement, any> | null = null;
+    constructor(props: any) {
+        super(props);
+        this._chartElement = React.createRef();
+    }
 
     private findNode(graph: Graph, id: string): any {
         return graph.nodes.find(n => n.id === id);
     }
 
-    triplesToGraph(triples: Array<n3.Quad>): void {
+    public triplesToGraph(triples: Array<n3.Quad>): void {
 
         if (this.props.config.error) {
             console.error('has error...');
             return;
         }
 
-        //Graph
-        let graph: Graph = { nodes: [], links: [] };
+        // graph
+        const graph: Graph = { nodes: [], links: [] };
 
-        //Initial Graph from triples
-        triples.forEach((triple) => {
-            let subject = triple.subject;
-            let predicate = triple.predicate;
-            let object = triple.object;
+        // initial Graph from triples
+        triples.forEach(triple => {
+            const subject = triple.subject;
+            const predicate = triple.predicate;
+            const object = triple.object;
 
             let subjNode: any = this.findNode(graph, subject.id);
             let objNode: any = this.findNode(graph, object.id);
@@ -55,7 +59,6 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
                 graph.nodes.push(objNode);
             }
 
-
             graph.links.push({ source: subjNode, target: objNode, predicate: predicate.id, weight: 1 });
         });
 
@@ -63,14 +66,14 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
 
     }
 
-    setChart(graph: Graph) {
-        if (this.svg === null) {
+    public setChart(graph: Graph): void {
+        if (this._svg === null) {
             return;
         }
-        this.svg.html('');
+        this._svg.html('');
         // ==================== Add Marker ====================
-        this.svg.append('svg:defs');
-        this.svg.selectAll('marker')
+        this._svg.append('svg:defs');
+        this._svg.selectAll('marker')
             .data(['end'])
             .enter().append('svg:marker')
             .attr('id', String)
@@ -84,18 +87,20 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             .attr('points', '0,-5 5,0 0,5');
 
         // ==================== Add Links ====================
-        let links = this.svg.selectAll('.link')
+        const links = this._svg.selectAll('.link')
             .data(graph.links)
             .enter()
             .append('line')
             .attr('marker-end', 'url(#end)')
             .attr('class', 'link')
-            .on('mouseenter', (a, i) => this.svg && this.svg.select('#link-text-' + i).attr('class', 'chart__text chart__text--hovered'))
-            .on('mouseleave', (a, i) => this.svg && this.svg.select('#link-text-' + i).attr('class', 'chart__text'))
+            .on('mouseenter', (a, i) => this._svg && this._svg.select('#link-text-' + i)
+                .attr('class', 'chart__text chart__text--hovered'))
+            .on('mouseleave', (a, i) => this._svg && this._svg.select('#link-text-' + i)
+                .attr('class', 'chart__text'))
             .attr('stroke-width', 2);
 
         // ==================== Add Link Names =====================
-        let linkTexts = this.svg.selectAll('.link-text')
+        const linkTexts = this._svg.selectAll('.link-text')
             .data(graph.links)
             .enter()
             .append('text')
@@ -104,7 +109,7 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             .text(d => d.predicate);
 
         // ==================== Add Link Names =====================
-        let nodeTexts = this.svg.selectAll('.node-text')
+        const nodeTexts = this._svg.selectAll('.node-text')
             .data(graph.nodes)
             .enter()
             .append('text')
@@ -113,19 +118,23 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             .text(d => d.label);
 
         // ==================== Add Node =====================
-        let nodes = this.svg.selectAll('.node')
+        const nodes = this._svg.selectAll('.node')
             .data(graph.nodes)
             .enter()
             .append('circle')
             .attr('class', 'node')
-            .on('mouseenter', (a, i) => this.svg && this.svg.select('#node-text-' + i).attr('class', 'chart__text chart__text--hovered'))
-            .on('mouseleave', (a, i) => this.svg && this.svg.select('#node-text-' + i).attr('class', 'chart__text'))
+            .on('mouseenter', (a, i) => this._svg && this._svg.select('#node-text-' + i)
+                .attr('class', 'chart__text chart__text--hovered'))
+            .on('mouseleave', (a, i) => this._svg && this._svg.select('#node-text-' + i)
+                .attr('class', 'chart__text'))
             .attr('r', 10);
 
-        let centerTop = this._chartElement && this._chartElement.current ? this._chartElement.current.clientWidth / 2 : 400;
-        let centerLeft = this._chartElement && this._chartElement.current ? this._chartElement.current.clientHeight / 2 : 300;
+        const centerTop = this._chartElement
+            && this._chartElement.current ? this._chartElement.current.clientWidth / 2 : 400;
+        const centerLeft = this._chartElement
+            && this._chartElement.current ? this._chartElement.current.clientHeight / 2 : 300;
 
-        let force = d3
+        const force = d3
             .forceSimulation()
             .nodes(graph.nodes)
             .force('link', d3.forceLink())
@@ -133,7 +142,7 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
             .force('center', d3.forceCenter(centerTop, centerLeft));
 
         // ==================== Force ====================
-        force.on('tick', function () {
+        force.on('tick', () => {
             nodes
                 .attr('cx', d => d.x)
                 .attr('cy', d => d.y);
@@ -154,14 +163,14 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
         });
     }
 
-    componentDidUpdate(nextProps: { config: { triples: Array<n3.Quad>, error?: N3Error } }) {
+    public componentDidUpdate(nextProps: { config: { triples: Array<n3.Quad>, error?: N3Error } }): void {
         if (nextProps.config) {
             this.triplesToGraph(nextProps.config.triples);
         }
     }
 
-    componentDidMount() {
-        this.svg = d3.select('#svg-container').append('svg')
+    public componentDidMount(): void {
+        this._svg = d3.select('#svg-container').append('svg')
             .attr('width', '100%')
             .attr('height', '100%');
 
@@ -171,9 +180,9 @@ export class Chart extends Component<{ config: { triples?: Array<n3.Quad>, error
         }
     }
 
-    render() {
+    public render(): JSX.Element {
         return (
-            <div className="chart" id="svg-container" ref={this._chartElement}>
+            <div className='chart' id='svg-container' ref={this._chartElement}>
             </div>
         );
     }

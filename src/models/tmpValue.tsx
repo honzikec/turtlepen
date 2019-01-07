@@ -1,3 +1,5 @@
+/* Copyright 2018 Jan Kaiser */
+
 export const initialValue = `@base <http://example.org/base/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -14,7 +16,8 @@ export const initialValue = `@base <http://example.org/base/> .
     ex:homePage <http://purl.org/net/dajobe/>
   ] .
 
-<http://www.w3.org/TR/rdf-syntax-grammar> <http://purl.org/dc/elements/1.1/title> "RDF/XML Syntax Specification (Revised)" .
+<http://www.w3.org/TR/rdf-syntax-grammar>
+<http://purl.org/dc/elements/1.1/title> "RDF/XML Syntax Specification (Revised)" .
 <http://www.w3.org/TR/rdf-syntax-grammar> <http://example.org/stuff/1.0/editor> _:bnode .
 _:bnode <http://example.org/stuff/1.0/fullname> "Dave Beckett" .
 _:bnode <http://example.org/stuff/1.0/homePage> <http://purl.org/net/dajobe/> .
