@@ -73,16 +73,8 @@ export class Chart extends Component<
         this._svg.html('');
         // ==================== Add Marker ====================
         this._svg.append('svg:defs');
-        this._svg.selectAll('marker')
+        this._svg.selectAll('link-endings')
             .data(['end'])
-            .enter().append('svg:marker')
-            .attr('id', String)
-            .attr('viewBox', '0 -5 10 10')
-            .attr('refX', 13)
-            .attr('refY', 0)
-            .attr('markerWidth', 8)
-            .attr('markerHeight', 8)
-            .attr('orient', 'auto')
             .append('svg:polyline')
             .attr('points', '0,-5 5,0 0,5');
 
@@ -91,13 +83,19 @@ export class Chart extends Component<
             .data(graph.links)
             .enter()
             .append('line')
-            .attr('marker-end', 'url(#end)')
             .attr('class', 'link')
             .on('mouseenter', (a, i) => this._svg && this._svg.select('#link-text-' + i)
                 .attr('class', 'chart__text chart__text--hovered'))
             .on('mouseleave', (a, i) => this._svg && this._svg.select('#link-text-' + i)
                 .attr('class', 'chart__text'))
             .attr('stroke-width', 2);
+
+        // ==================== Add Arrows ====================
+        const arrows = this._svg.selectAll('.arrow')
+            .data(graph.links)
+            .enter()
+            .append('polygon')
+            .attr('fill', 'blue');
 
         // ==================== Add Link Names =====================
         const linkTexts = this._svg.selectAll('.link-text')
@@ -152,6 +150,15 @@ export class Chart extends Component<
                 .attr('y1', d => d.source.y)
                 .attr('x2', d => d.target.x)
                 .attr('y2', d => d.target.y);
+
+            arrows
+                .attr('points',
+                    d => {
+                        return d.target.x + ',' + (d.target.y) + ' '
+                            + d.target.x + 20 + ',' + (d.target.y + 20) + ' '
+                            + (d.target.x - 20) + ',' + (d.target.y - 20);
+                    }
+                );
 
             nodeTexts
                 .attr('x', d => d.x + 12)
