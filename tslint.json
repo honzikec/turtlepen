@@ -9,8 +9,6 @@
       true,
       2
     ],
-    "restrict-plus-operands": true,
-    "strict-boolean-expressions": true,
     "prefer-const": true,
     "quotemark": [
       true,
@@ -58,6 +56,7 @@
     ],
     "ordered-imports": false,
     "no-default-export": false,
-    "no-submodule-imports": false
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false
   }
 }
