@@ -8,40 +8,57 @@
     border-top: 1em solid $color__borders;
     border-bottom: 1em solid $color__borders;
     border-right: 1em solid $color__borders;
+    &__panzoom {
+        height: 100%;
+    }
+    &__svg {
+        overflow: visible !important;
+    }
+    &__svg-controls {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        color: white;
+        font-size: 50px;
+    }
+
     &__text {
         transition: .3s ease-out;
         font-size: 1em;
         font-family: $font-family;
-        fill: white;
+        fill: greenyellow;
         display: none;
-        &--hovered {
+        transform-origin: center;
+        text-shadow: 0 0 10px darken(greenyellow, 30%);
+        &--hover {
             display: block;
         }
     }
-}
-
-.node {
-    stroke: #fff;
-    fill: #ddd;
-    stroke-width: 1.5px;
-    &:hover {
-        fill: greenyellow;
+    &__arrow {
+        fill: #999;
+        fill-opacity: .3s;
+        transition: fill-opacity .3s ease-out, opacity .3 ease-out;
+        &--hover {
+            fill-opacity: 1;
+            fill: greenyellow;
+        }
     }
-}
-
-.link {
-    stroke: #999;
-    stroke-opacity: .6;
-    stroke-width: 2px;
-    transition: .3s ease-out;
-    &:hover {
-        stroke: greenyellow;
-        stroke-opacity: 1;
+    &__link {
+        stroke: #999;
+        stroke-opacity: .6;
         stroke-width: 2px;
+        transition: .3s ease-out;
+        &:hover,
+        &--hover {
+            stroke: greenyellow;
+            stroke-opacity: 1;
+            stroke-width: 2px;
+        }
     }
-}
-
-marker {
-    stroke: #999;
-    fill: rgba(124, 240, 10, 0);
+    &__node {
+        fill: #ddd;
+        &:hover {
+            fill: greenyellow;
+        }
+    }
 }

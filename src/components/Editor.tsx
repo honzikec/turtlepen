@@ -16,6 +16,7 @@ import 'brace/ext/searchbox';
 
 // tmp
 import { initialValue } from './../models/tmpValue';
+import { TurtleDropzone } from './TurtleDropzone';
 
 export class Editor extends Component<EditorChangeProps, EditorState> {
     private _aceEditor: React.RefObject<any>;
@@ -29,32 +30,6 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
         this.handleChange = this.handleChange.bind(this);
         // this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    private parse(): Promise<Array<n3.Quad>> {
-        return new Promise((resolve, reject) => {
-            const parser = n3.Parser({ format: 'text/turtle' });
-            const triples: Array<n3.Quad> = [];
-            const editor = this._aceEditor.current.editor.getSession();
-            editor.clearAnnotations();
-            parser.parse(this.state.value, (error: N3Error, triple: n3.Quad, prefixes: n3.Prefixes) => {
-                if (error) {
-                    this.setState({ error });
-                    editor.setAnnotations([{
-                        row: error.context ? error.context.line - 1 : 1,
-                        text: error.message,
-                        type: 'error'
-                    }]);
-                } else if (triple) {
-                    triples.push(triple);
-                }
-                resolve(triples);
-            });
-        });
-    }
-
-    private triggerResize(): void {
-        this._aceEditor.current.editor.resize();
     }
 
     public componentDidUpdate(props: EditorChangeProps) {
@@ -86,6 +61,8 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
             <div className={editorClassName}>
+                <TurtleDropzone />
+
                 {/* <p>{this.state.error && this.state.error.message}</p> */}
                 <AceEditor
                     ref={this._aceEditor}
@@ -101,5 +78,31 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
                 />
             </div>
         );
+    }
+
+    private parse(): Promise<Array<n3.Quad>> {
+        return new Promise((resolve, reject) => {
+            const parser = n3.Parser({ format: 'text/turtle' });
+            const triples: Array<n3.Quad> = [];
+            const editor = this._aceEditor.current.editor.getSession();
+            editor.clearAnnotations();
+            parser.parse(this.state.value, (error: N3Error, triple: n3.Quad, prefixes: n3.Prefixes) => {
+                if (error) {
+                    this.setState({ error });
+                    editor.setAnnotations([{
+                        row: error.context ? error.context.line - 1 : 1,
+                        text: error.message,
+                        type: 'error'
+                    }]);
+                } else if (triple) {
+                    triples.push(triple);
+                }
+                resolve(triples);
+            });
+        });
+    }
+
+    private triggerResize(): void {
+        this._aceEditor.current.editor.resize();
     }
 }
