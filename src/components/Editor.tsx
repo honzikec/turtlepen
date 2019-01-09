@@ -10,6 +10,8 @@ import { N3Error } from '../models/N3Error.model';
 import { EditorChangeProps } from '../models/EditorChangeProps.model';
 import { EditorState } from './../models/EditorState.model';
 
+import FileSaver from 'file-saver';
+
 import 'brace/mode/xml';
 import 'brace/theme/twilight';
 import 'brace/ext/searchbox';
@@ -29,6 +31,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.exportAsFile = this.exportAsFile.bind(this);
         // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -57,12 +60,17 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         this.validate();
     }
 
+    public exportAsFile(): void {
+        const blob = new Blob([this.state.value], { type: 'text/turtle;charset=utf-8' });
+        FileSaver.saveAs(blob, 'turtlepen_output.ttl');
+    }
+
     public render(): JSX.Element {
         const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
             <div className={editorClassName}>
                 <TurtleDropzone />
-
+                <a onClick={this.exportAsFile}>Download!!!</a>
                 {/* <p>{this.state.error && this.state.error.message}</p> */}
                 <AceEditor
                     ref={this._aceEditor}
