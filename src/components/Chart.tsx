@@ -4,6 +4,7 @@ import React, { Component, RefObject } from 'react';
 import * as n3 from 'n3';
 import * as d3 from 'd3';
 import { N3Error } from '../models/N3Error.model';
+import ReactPanZoom from '@ajainarayanan/react-pan-zoom';
 
 export interface Graph {
     nodes: Array<any>;
@@ -12,18 +13,23 @@ export interface Graph {
 
 export class Chart extends Component<
     { config: { triples?: Array<n3.Quad>, error?: N3Error } },
-    { graph?: Graph, error?: N3Error }
+    { error?: N3Error, zoom: number }
     > {
 
     private _chartElement: RefObject<HTMLDivElement>;
-    private _svg: d3.Selection<SVGSVGElement, {}, HTMLElement, any> | null = null;
+    private _svg: d3.Selection<d3.BaseType, {}, HTMLElement, any> | null = null;
+    private _zoomStep = .2;
 
     // initial state before we get some from the App component
-    public state: { graph?: Graph, error?: N3Error } = { graph: { nodes: [], links: [] } };
+    public state: { error?: N3Error, zoom: number } = { zoom: 1 };
 
     constructor(props: any) {
         super(props);
         this._chartElement = React.createRef();
+
+        // stupid "this" binding
+        this.zoomIn = this.zoomIn.bind(this);
+        this.zoomOut = this.zoomOut.bind(this);
     }
 
     public triplesToGraph(triples?: Array<n3.Quad>): void {
@@ -187,13 +193,17 @@ export class Chart extends Component<
                 .attr('y1', d => d.source.y)
                 .attr('x2', d => d.target.x)
                 .attr('y2', d => d.target.y);
+
         });
     }
 
     public componentDidMount(): void {
-        this._svg = d3.select('#svg-container').append('svg')
-            .attr('width', '100%')
-            .attr('height', '100%');
+        const chartEl = this && this._chartElement && this._chartElement.current || new HTMLElement();
+
+        this._svg = d3.select('#svg')
+            .attr('preserveAspectRatio', 'xMinYMin meet')
+            .attr('width', chartEl.clientWidth)
+            .attr('height', chartEl.clientHeight);
 
         // initial chart draw
         if (this.props.config.triples) {
@@ -201,10 +211,22 @@ export class Chart extends Component<
         }
     }
 
+    public componentDidUpdate(props: any): void {
+        if (props.config !== this.props.config) {
+            this.triplesToGraph(this.props.config.triples);
+        }
+    }
+
     public render(): JSX.Element {
-        this.triplesToGraph(this.props.config.triples);
         return (
             <div className='chart' id='svg-container' ref={this._chartElement}>
+                <ReactPanZoom className='chart__panzoom' zoom={this.state.zoom}>
+                    <svg id='svg' className='chart__svg'></svg>
+                </ReactPanZoom>
+                <div className='chart__svg-controls'>
+                    <a onClick={this.zoomOut}>-</a>
+                    <a onClick={this.zoomIn}>+</a>
+                </div>
             </div>
         );
     }
@@ -218,5 +240,17 @@ export class Chart extends Component<
         const dx = ex - cx;
         const theta = Math.atan2(dy, dx);
         return theta;
+    }
+
+    private zoomIn() {
+        this.setState({
+            zoom: this.state.zoom + this._zoomStep
+        });
+    }
+
+    private zoomOut() {
+        this.setState({
+            zoom: this.state.zoom - this._zoomStep
+        });
     }
 }

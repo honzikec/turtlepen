@@ -8,13 +8,27 @@
     border-top: 1em solid $color__borders;
     border-bottom: 1em solid $color__borders;
     border-right: 1em solid $color__borders;
+    &__panzoom {
+        height: 100%;
+    }
+    &__svg {
+        overflow: visible !important;
+    }
+    &__svg-controls {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        color: white;
+        font-size: 50px;
+    }
+
     &__text {
         transition: .3s ease-out;
         font-size: 1em;
         font-family: $font-family;
         fill: greenyellow;
         display: none;
-        transform-origin: center; 
+        transform-origin: center;
         text-shadow: 0 0 10px darken(greenyellow, 30%);
         &--hover {
             display: block;
@@ -34,7 +48,8 @@
         stroke-opacity: .6;
         stroke-width: 2px;
         transition: .3s ease-out;
-        &:hover, &--hover {
+        &:hover,
+        &--hover {
             stroke: greenyellow;
             stroke-opacity: 1;
             stroke-width: 2px;
