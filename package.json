@@ -3,14 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/ace": "0.0.41",
-    "@types/d3": "^5.5.0",
-    "@types/jest": "^23.3.10",
-    "@types/n3": "^1.0.5",
-    "@types/node": "^10.12.18",
-    "@types/react": "^16.7.18",
-    "@types/react-dom": "^16.0.11",
     "d3": "^5.7.0",
+    "file-saver": "^2.0.0",
     "n3": "^1.0.2",
     "node-sass": "^4.11.0",
     "react": "^16.7.0",
@@ -34,5 +28,15 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/ace": "0.0.41",
+    "@types/d3": "^5.5.0",
+    "@types/jest": "^23.3.10",
+    "@types/n3": "^1.0.5",
+    "@types/node": "^10.12.18",
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.0.11",
+    "@types/file-saver": "^2.0.0"
+  }
 }

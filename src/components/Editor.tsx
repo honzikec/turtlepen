@@ -16,6 +16,7 @@ import 'brace/ext/searchbox';
 
 // tmp
 import { initialValue } from './../models/tmpValue';
+import { TurtleDropzone } from './TurtleDropzone';
 
 export class Editor extends Component<EditorChangeProps, EditorState> {
     private _aceEditor: React.RefObject<any>;
@@ -60,6 +61,8 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
             <div className={editorClassName}>
+                <TurtleDropzone />
+
                 {/* <p>{this.state.error && this.state.error.message}</p> */}
                 <AceEditor
                     ref={this._aceEditor}

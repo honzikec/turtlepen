@@ -26,7 +26,11 @@ export class Chart extends Component<
         this._chartElement = React.createRef();
     }
 
-    public triplesToGraph(triples: Array<n3.Quad>): void {
+    public triplesToGraph(triples?: Array<n3.Quad>): void {
+        if (!triples) {
+            console.warn('no triples...');
+            return;
+        }
 
         if (this.props.config.error) {
             console.error('has error...');
@@ -186,12 +190,6 @@ export class Chart extends Component<
         });
     }
 
-    public componentDidUpdate(nextProps: { config: { triples: Array<n3.Quad>, error?: N3Error } }): void {
-        if (nextProps.config) {
-            this.triplesToGraph(nextProps.config.triples);
-        }
-    }
-
     public componentDidMount(): void {
         this._svg = d3.select('#svg-container').append('svg')
             .attr('width', '100%')
@@ -204,6 +202,7 @@ export class Chart extends Component<
     }
 
     public render(): JSX.Element {
+        this.triplesToGraph(this.props.config.triples);
         return (
             <div className='chart' id='svg-container' ref={this._chartElement}>
             </div>
