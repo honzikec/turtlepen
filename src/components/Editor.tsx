@@ -21,18 +21,22 @@ import { initialValue } from './../models/tmpValue';
 import { TurtleDropzone } from './TurtleDropzone';
 
 export class Editor extends Component<EditorChangeProps, EditorState> {
+    public static CURRENT_INPUT_KEY = 'turtlepen_current_input';
+
     private _aceEditor: React.RefObject<any>;
 
     constructor(props: any) {
         super(props);
         this._aceEditor = React.createRef();
         this.state = {
-            value: initialValue
+            value: localStorage.getItem(Editor.CURRENT_INPUT_KEY) || ''
         };
 
+        // stupid "this" binding
         this.handleChange = this.handleChange.bind(this);
         this.exportAsFile = this.exportAsFile.bind(this);
         this.handleFileImport = this.handleFileImport.bind(this);
+        this.saveStateToLocalStorage = this.saveStateToLocalStorage.bind(this);
         // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -46,6 +50,13 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
             this._aceEditor.current.editor.getSession().setMode(customMode);
             this.validate();
         }
+        window.addEventListener('beforeunload', this.saveStateToLocalStorage);
+    }
+
+    public componentWillUnmount(): void {
+        this.saveStateToLocalStorage();
+        // remove the event handler for normal unmounting
+        window.removeEventListener('beforeunload', this.saveStateToLocalStorage);
     }
 
     public validate(): void {
@@ -67,12 +78,15 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
     }
 
     public render(): JSX.Element {
+        const errorMessage = this.state.error && this.state.error.message ?
+            <p className='editor__error'>{this.state.error.message}</p>
+            : <React.Fragment />;
         const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
             <div className={editorClassName}>
                 <TurtleDropzone onFileImport={this.handleFileImport} />
                 <a onClick={this.exportAsFile}>Download!!!</a>
-                {/* <p>{this.state.error && this.state.error.message}</p> */}
+                {errorMessage}
                 <AceEditor
                     ref={this._aceEditor}
                     mode='text'
@@ -87,6 +101,11 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
                 />
             </div>
         );
+    }
+
+    private saveStateToLocalStorage(): void {
+        console.log('setting', this.state.value);
+        localStorage.setItem(Editor.CURRENT_INPUT_KEY, this.state.value);
     }
 
     private parse(): Promise<Array<n3.Quad>> {
