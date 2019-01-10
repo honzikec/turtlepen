@@ -201,9 +201,10 @@ export class Chart extends Component<
         const chartEl = this && this._chartElement && this._chartElement.current || new HTMLElement();
 
         this._svg = d3.select('#svg')
-            .attr('preserveAspectRatio', 'xMinYMin meet')
             .attr('width', chartEl.clientWidth)
-            .attr('height', chartEl.clientHeight);
+            .attr('height', chartEl.clientHeight)
+            /* ugly hack to make pointer events work outside the box */
+            .attr('style', 'box-shadow : 0px -0px 10000px transparent');
 
         // initial chart draw
         if (this.props.config.triples) {
