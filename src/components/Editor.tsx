@@ -32,6 +32,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
         this.handleChange = this.handleChange.bind(this);
         this.exportAsFile = this.exportAsFile.bind(this);
+        this.handleFileImport = this.handleFileImport.bind(this);
         // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -69,7 +70,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
         return (
             <div className={editorClassName}>
-                <TurtleDropzone />
+                <TurtleDropzone onFileImport={this.handleFileImport} />
                 <a onClick={this.exportAsFile}>Download!!!</a>
                 {/* <p>{this.state.error && this.state.error.message}</p> */}
                 <AceEditor
@@ -112,5 +113,9 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
     private triggerResize(): void {
         this._aceEditor.current.editor.resize();
+    }
+
+    private handleFileImport(result: string | ArrayBuffer | null): void {
+        console.log(result);
     }
 }

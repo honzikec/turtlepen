@@ -2,8 +2,9 @@
 
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
+import { FileImportProps } from '../models/FileImportProps.model';
 
-export class TurtleDropzone extends React.Component {
+export class TurtleDropzone extends React.Component<FileImportProps, {}> {
   public onDrop = (acceptedFiles: any, rejectedFiles: any) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
@@ -11,7 +12,7 @@ export class TurtleDropzone extends React.Component {
       const reader = new FileReader();
       reader.addEventListener('load', () => {
         const result = reader.result;
-        console.log(result);
+        this.props.onFileImport(result);
       });
       reader.readAsText(file);
 
