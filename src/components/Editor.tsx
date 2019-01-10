@@ -79,14 +79,21 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
     public render(): JSX.Element {
         const errorMessage = this.state.error && this.state.error.message ?
-            <p className='editor__error'>{this.state.error.message}</p>
+            <div className='editor__error'><span className='ico-error'></span> {this.state.error.message}</div>
             : <React.Fragment />;
-        const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
+
+        const editorClassName = 'editor'
+            + (this.props.smaller ? ' editor--with-chart' : '')
+            + (this.state.error ? ' editor--has-error' : '');
+
         return (
             <div className={editorClassName}>
-                <TurtleDropzone onFileImport={this.handleFileImport} />
-                <a onClick={this.exportAsFile}>Download!!!</a>
-                {errorMessage}
+                <div className='editor__buttons'>
+                    <TurtleDropzone onFileImport={this.handleFileImport} />
+                    <button onClick={this.exportAsFile} className='button'>
+                        <span className='ico-download'></span> Export as file...
+                    </button>
+                </div>
                 <AceEditor
                     ref={this._aceEditor}
                     mode='text'
@@ -99,6 +106,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
                     editorProps={{ $blockScrolling: true }}
                     value={this.state.value}
                 />
+                {errorMessage}
             </div>
         );
     }

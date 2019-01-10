@@ -24,17 +24,18 @@ export class TurtleDropzone extends React.Component<FileImportProps, {}> {
 
       <Dropzone onDrop={this.onDrop} accept='text/*,'>
         {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => {
+          let text = 'Select or drop file to import turtle...';
+          let dropzoneClass = 'dropzone';
+          if (isDragActive) {
+            dropzoneClass = isDragAccept ? 'dropzone--active' : 'dropzone--error';
+            text = isDragAccept ? 'Drop the files here...' : 'Only valid text files are supported...';
+          }
           return (
             <div
               {...getRootProps()}
-              className={isDragAccept ? 'dropzone dropzone--isActive' : 'dropzone'}>
+              className={dropzoneClass}>
               <input {...getInputProps()} />
-              {
-                isDragActive && isDragAccept ?
-                  <p>Drop the file here...</p> :
-                  (isDragActive ? <p>Only valid text files are supported...</p>
-                    : <p>Try dropping some files here, or click to select files to upload.</p>)
-              }
+              <React.Fragment><span className='ico-upload'></span> {text}</React.Fragment>
             </div>
           );
         }}

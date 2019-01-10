@@ -1,12 +1,25 @@
 .editor {
-    padding: 1em 0;
+    padding: 0 0 1em 0;
     background: $color__borders;
-    height: calc(100% - 5em);
+    height: calc(100% - 7.3em);
     width: calc(100% - 3em);
     display: block;
     box-sizing: border-box;
     float: left;
+    &__error {
+        color: $color__red;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2em;
+        font-style: italic;
+        padding-left: 3em;
+    }
     &--with-chart {
         width: calc(50% - 5em);
+    }
+    &--has-error {
+        height: calc(100% - 9.2em);
     }
 }

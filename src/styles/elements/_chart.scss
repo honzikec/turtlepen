@@ -1,13 +1,13 @@
 .chart {
-    background: $color__header;
-    height: calc(100% - 5em);
+    background: $color__dark;
+    height: calc(100% - 4.5em);
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
-    height: calc(100% - 5em);
     border-top: 1em solid $color__borders;
     border-bottom: 1em solid $color__borders;
     border-right: 1em solid $color__borders;
+    cursor: move;
     &__panzoom {
         height: 100%;
     }
@@ -18,47 +18,47 @@
         position: absolute;
         top: 1em;
         right: 1em;
-        color: white;
-        font-size: 50px;
+        button {
+            @extend .button;
+        }
     }
-
     &__text {
         transition: .3s ease-out;
         font-size: 1em;
         font-family: $font-family;
-        fill: greenyellow;
+        fill: darken($color__green, 20%);
         display: none;
         transform-origin: center;
-        text-shadow: 0 0 10px darken(greenyellow, 30%);
+        text-shadow: 1px 1px 1px #000;
         &--hover {
             display: block;
         }
     }
     &__arrow {
-        fill: #999;
+        fill: $color__light;
         fill-opacity: .3s;
         transition: fill-opacity .3s ease-out, opacity .3 ease-out;
         &--hover {
             fill-opacity: 1;
-            fill: greenyellow;
+            fill: $color__green;
         }
     }
     &__link {
-        stroke: #999;
+        stroke: $color__light;
         stroke-opacity: .6;
         stroke-width: 2px;
         transition: .3s ease-out;
         &:hover,
         &--hover {
-            stroke: greenyellow;
+            stroke: $color__green;
             stroke-opacity: 1;
             stroke-width: 2px;
         }
     }
     &__node {
-        fill: #ddd;
+        fill: lighten($color__light, 30%);
         &:hover {
-            fill: greenyellow;
+            fill: $color__green;
         }
     }
 }

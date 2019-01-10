@@ -32,6 +32,7 @@ class App extends Component<{}, AppState> {
   }
 
   public render(): JSX.Element {
+    const hasError = this.state.error ? true : false;
     let chartComponent: JSX.Element = <React.Fragment />;
     if (this.state) {
       const chartConfig = { triples: this.state.triples, error: this.state.error };
@@ -41,7 +42,7 @@ class App extends Component<{}, AppState> {
       <React.Fragment>
         <Header></Header>
         <Editor onEditorChanged={this.handleEditorChange} smaller={this.state.showChart} />
-        <ChartToggle open={this.state.showChart} onChartToggled={this.handleChartToggle} />
+        <ChartToggle open={this.state.showChart} hasError={hasError} onChartToggled={this.handleChartToggle} />
         {chartComponent}
       </React.Fragment >
     );

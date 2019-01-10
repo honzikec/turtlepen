@@ -225,8 +225,8 @@ export class Chart extends Component<
                     <svg id='svg' className='chart__svg'></svg>
                 </ReactPanZoom>
                 <div className='chart__svg-controls'>
-                    <a onClick={this.zoomOut}>-</a>
-                    <a onClick={this.zoomIn}>+</a>
+                    <button type='button' onClick={this.zoomOut}><span className='ico-zoom-out'></span></button>
+                    <button type='button' onClick={this.zoomIn}><span className='ico-zoom-in'></span></button>
                 </div>
             </div>
         );
@@ -243,13 +243,13 @@ export class Chart extends Component<
         return theta;
     }
 
-    private zoomIn() {
+    private zoomIn(): void {
         this.setState({
             zoom: this.state.zoom + this._zoomStep
         });
     }
 
-    private zoomOut() {
+    private zoomOut(): void {
         this.setState({
             zoom: this.state.zoom - this._zoomStep
         });

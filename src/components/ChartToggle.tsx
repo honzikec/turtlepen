@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-export class ChartToggle extends Component<{ open: boolean, onChartToggled: () => void }, {}> {
+export class ChartToggle extends Component<{ open: boolean, hasError: boolean, onChartToggled: () => void }, {}> {
 
     constructor(props: any) {
         super(props);
@@ -15,8 +15,11 @@ export class ChartToggle extends Component<{ open: boolean, onChartToggled: () =
     }
 
     public render(): JSX.Element {
+        const chartToggleClass = 'chart-toggle' + (this.props.hasError ? ' chart-toggle--has-error' : '');
         return (
-            <a className='chart-toggle' onClick={this.onChartToggle}></a>
+            <button title='Toggle Chart' className={chartToggleClass} onClick={this.onChartToggle}>
+                <span className='ico-chart'></span>
+            </button>
         );
     }
 }

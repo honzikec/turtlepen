@@ -1,9 +1,9 @@
 .header {
     display: block;
-    height: 5em;
+    height: 4.5em;
     width: 100%;
-    background: linear-gradient(to top, $color__header, darken($color__header, 4%));
-    border-bottom: 1px solid darken($color__header, 6%);
+    background: linear-gradient(to top, $color__dark, darken($color__dark, 4%));
+    border-bottom: 1px solid darken($color__dark, 6%);
     &__logo {
         display: block;
         height: 100%;
