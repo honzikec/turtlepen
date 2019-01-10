@@ -11,7 +11,7 @@ export class TurtleDropzone extends React.Component<FileImportProps, {}> {
 
       const reader = new FileReader();
       reader.addEventListener('load', () => {
-        const result = reader.result;
+        const result: string = reader.result ? reader.result.toString() : '';
         this.props.onFileImport(result);
       });
       reader.readAsText(file);

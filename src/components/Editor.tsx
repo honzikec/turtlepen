@@ -56,7 +56,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         });
     }
 
-    public handleChange(value: string, event: any): void {
+    public handleChange(value: string): void {
         this.setState({ value });
         this.validate();
     }
@@ -115,7 +115,7 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         this._aceEditor.current.editor.resize();
     }
 
-    private handleFileImport(result: string | ArrayBuffer | null): void {
-        console.log(result);
+    private handleFileImport(result: string): void {
+        this.handleChange(result);
     }
 }
