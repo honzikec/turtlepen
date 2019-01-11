@@ -9,3 +9,5 @@ Syntax highlighting rules were heavily inspired by [this implementation for Subl
 To be honest, the visualisation has been inspired as well... :) This time by [this implementation](https://github.com/Rathachai/d3rdf/blob/master/index.html) by [Rathachai CHAWUTHAI](https://github.com/Rathachai). Thanks!
 
 The application is completely Open Source and you are free to use and modify it in whichever way you please. PRs and issues are welcome.
+
+P.S. Yes - the name and look was pretty much inspired by CodePen :)
