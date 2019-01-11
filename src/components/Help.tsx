@@ -7,7 +7,7 @@ export class Help extends Component {
   public render(): JSX.Element {
     return (
       <section className='page'>
-        <h1>How to use <img title='TurtlePen' src={logo} className='page__logo' /></h1>
+        <h1>How to use <img alt='TurtlePen' src={logo} className='page__logo' /></h1>
         <p>
           The app is designed to allow an intuitive editing experience but I totally get how it could get frustrating
           sometimes :) That's why there's this short guide to help you get familiar with TurtlePen.

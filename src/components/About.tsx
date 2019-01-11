@@ -7,7 +7,7 @@ export class About extends Component {
   public render(): JSX.Element {
     return (
       <section className='page'>
-        <h1>About <img title='TurtlePen' src={logo} className='page__logo' /></h1>
+        <h1>About <img alt='TurtlePen' src={logo} className='page__logo' /></h1>
         <p>
           TurtlePen is an academic project written in <a href='https://reactjs.org/'>React.js</a> that allows simple and
           intuitive editing, validation and visualisation of <a href='https://www.w3.org/TR/turtle/' target='_blank'>
@@ -42,7 +42,7 @@ export class About extends Component {
         <p>
           To be honest, the visualisation has been inspired as well... :) This time
           by <a href='https://github.com/Rathachai/d3rdf/blob/master/index.html' target='_blank'>this implementation</a>
-          by <a href='https://github.com/Rathachai' target='_blank'>Rathachai CHAWUTHAI</a>. Thanks!
+          &nbsp;by <a href='https://github.com/Rathachai' target='_blank'>Rathachai CHAWUTHAI</a>. Thanks!
         </p>
         <p>
           The app is completely Open Source and you can check it out

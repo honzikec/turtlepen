@@ -1,12 +1,15 @@
-// TODO: better colors
 .ace_rdfs-type {
-  color: darken($color__green, 30%);
+  color: #fbff8e;
 }
 
 .ace_literal {
-  color: plum;
+  color: #b9d7e8;
 }
 
 .ace_constant:not(.ace_complex) {
-  color: aqua !important;
+  color: #e5bfff !important;
+}
+
+.ace_blank-node {
+  color: #ffcbad !important;
 }

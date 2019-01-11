@@ -1,68 +1,11 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+TurtlePen is an academic project written in [React.js](https://reactjs.org/) that allows simple and intuitive editing, validation and visualisation of [TURTLE](https://www.w3.org/TR/turtle/). It will also work for any other documents in the [N3Notation](https://www.w3.org/TeamSubmission/n3/) but the syntax highlighting might not be perfect. It was written as a part of an assignement for a Linked Data course at the [University of Economics in Prague](https://www.vse.cz/english/).
 
-## Available Scripts
+Running version of TurtlePen can be found at [turtlepen.app](https://turtlepen.app/).
 
-In the project directory, you can run:
+Apart from React.js, the app also heavily depends on [N3.js](https://github.com/rdfjs/N3.js) (used for parsing and validation), [react-ace](https://github.com/securingsincity/react-ace) (a wrapper for [ACE editor](https://github.com/ajaxorg/ace)) and on [d3](https://github.com/d3/d3) data visualisation library.
 
-### `npm start`
+Syntax highlighting rules were heavily inspired by [this implementation for Sublime](https://github.com/patchspace/sparql-sublime/blob/master/turtle.tmLanguage.JSON) by [Ash Moran](https://github.com/ashmoran). Thanks mate, your snippet saved me an awful lot of headache! :)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To be honest, the visualisation has been inspired as well... :) This time by [this implementation](https://github.com/Rathachai/d3rdf/blob/master/index.html) by [Rathachai CHAWUTHAI](https://github.com/Rathachai). Thanks!
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+The application is completely Open Source and you are free to use and modify it in whichever way you please. PRs and issues are welcome.
