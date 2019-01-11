@@ -15,6 +15,7 @@
         height: 2em;
         font-style: italic;
         padding-left: 3em;
+        font-size: em-calc(12px);
     }
     &--with-chart {
         width: calc(50% - 5em);

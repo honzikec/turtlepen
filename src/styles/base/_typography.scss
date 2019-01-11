@@ -1,0 +1,29 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+h1 {
+  font-size: em-calc(22px);
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+
+p {
+  line-height: 1.6em;
+}
+
+a {
+  color: darken($color__green, 25%);
+  text-decoration: none;
+  border-bottom: 1px solid darken($color__green, 25%);
+  transition: all .3s ease-out;
+  &:hover {
+    color: $color__green;
+    border-bottom-color: $color__green;
+  }
+}

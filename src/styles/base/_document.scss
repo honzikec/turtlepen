@@ -1,16 +1,18 @@
 html,
 body {
-    position: relative;
-    height: 100%;
+  position: relative;
+  height: 100%;
 }
 
 body {
-    background: $color__borders;
-    font-size: em-calc(14px);
-    font-family: $font-family;
+  background: $color__borders;
+  font-size: em-calc(14px);
+  font-family: $font-family;
+  color: lighten($color__light, 10%);
 }
 
-.document, #root {
-    height: 100%;
-    position: relative;
+.document,
+#root {
+  height: 100%;
+  position: relative;
 }

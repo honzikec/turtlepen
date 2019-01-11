@@ -5,6 +5,7 @@
   background: linear-gradient(to top, $color__dark, darken($color__dark, 4%));
   border-bottom: 1px solid darken($color__dark, 6%);
   overflow: hidden;
+  box-sizing: border-box;
   &__logo {
     display: block;
     height: 100%;
