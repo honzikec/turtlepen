@@ -1,14 +1,14 @@
-/* Copyright 2018 Jan Kaiser */
+/* Copyright 2019 Jan Kaiser */
 
 import React, { Component } from 'react';
 import AceEditor from 'react-ace';
 import * as n3 from 'n3';
 
-import { TurtleEditorMode } from './../utils/TurtleEditorMode';
+import { TurtleEditorMode } from './../../utils/TurtleEditorMode';
 
-import { N3Error } from '../models/N3Error.model';
-import { EditorChangeProps } from '../models/EditorChangeProps.model';
-import { EditorState } from './../models/EditorState.model';
+import { N3Error } from './../../models/N3Error.model';
+import { EditorChangeProps } from './../../models/EditorChangeProps.model';
+import { EditorState } from './../../models/EditorState.model';
 
 import FileSaver from 'file-saver';
 
@@ -16,8 +16,6 @@ import 'brace/mode/xml';
 import 'brace/theme/twilight';
 import 'brace/ext/searchbox';
 
-// tmp
-import { initialValue } from './../models/tmpValue';
 import { TurtleDropzone } from './TurtleDropzone';
 
 export class Editor extends Component<EditorChangeProps, EditorState> {
@@ -112,7 +110,6 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
     }
 
     private saveStateToLocalStorage(): void {
-        console.log('setting', this.state.value);
         localStorage.setItem(Editor.CURRENT_INPUT_KEY, this.state.value);
     }
 

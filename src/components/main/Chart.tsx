@@ -1,9 +1,9 @@
-/* Copyright 2018 Jan Kaiser */
+/* Copyright 2019 Jan Kaiser */
 
 import React, { Component, RefObject } from 'react';
 import * as n3 from 'n3';
 import * as d3 from 'd3';
-import { N3Error } from '../models/N3Error.model';
+import { N3Error } from './../../models/N3Error.model';
 import ReactPanZoom from '@ajainarayanan/react-pan-zoom';
 
 export interface Graph {

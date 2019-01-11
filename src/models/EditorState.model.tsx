@@ -1,4 +1,4 @@
-/* Copyright 2018 Jan Kaiser */
+/* Copyright 2019 Jan Kaiser */
 
 import { N3Error } from './N3Error.model';
 import * as n3 from 'n3';

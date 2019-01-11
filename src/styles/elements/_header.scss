@@ -1,16 +1,52 @@
 .header {
+  display: block;
+  height: 4.5em;
+  width: 100%;
+  background: linear-gradient(to top, $color__dark, darken($color__dark, 4%));
+  border-bottom: 1px solid darken($color__dark, 6%);
+  overflow: hidden;
+  &__logo {
     display: block;
-    height: 4.5em;
-    width: 100%;
-    background: linear-gradient(to top, $color__dark, darken($color__dark, 4%));
-    border-bottom: 1px solid darken($color__dark, 6%);
-    &__logo {
-        display: block;
-        height: 100%;
-        width: 11.5em;
-        padding: 0 1em;
-        background: url('./assets/logo.svg') 1em center no-repeat;
-        background-size: 11.5em auto;
-        float: left;
+    height: 100%;
+    width: 11.5em;
+    padding: 0 1em;
+    background: url('./assets/logo.svg') 1em center no-repeat;
+    background-size: 11.5em auto;
+    float: left;
+    transition: all .3s ease-out;
+    &:hover {
+      transform: scale(1.025);
     }
+  }
+  &__nav {
+    float: right;
+    &__link {
+      display: block;
+      box-sizing: border-box;
+      float: left;
+      padding: 0 2em;
+      border-left: 1px solid $color__borders;
+      line-height: 4em;
+      height: 4em;
+      color: $color__light;
+      font-size: em-calc(16px);
+      text-decoration: none;
+      transition: all .3s ease-out;
+      &:first-child {
+        border-color: transparent;
+      }
+      [class^="ico-"],
+      [class*=" ico-"] {
+        font-size: em-calc(20px);
+      }
+      &:hover {
+        background: lighten($color__dark, 4%);
+        color: lighten($color__light, 20%);
+      }
+      &--active {
+        background: lighten($color__dark, 2%);
+        color: lighten($color__light, 15%);
+      }
+    }
+  }
 }
