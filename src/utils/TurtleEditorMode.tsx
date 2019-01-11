@@ -3,12 +3,22 @@
 import 'brace/mode/text';
 import ace from 'brace';
 
+/**
+ * Custom regex rules for TURTLE syntax highlighting
+ *
+ * @export
+ * @class CustomHighlightRules
+ * @extends {ace.acequire('ace/mode/text_highlight_rules').TextHighlightRules}
+ */
 export class CustomHighlightRules extends ace.acequire(
     'ace/mode/text_highlight_rules'
 ).TextHighlightRules {
 
     constructor() {
         super();
+
+        // Credit: Very heavily inspired by this:
+        // https://github.com/patchspace/sparql-sublime/blob/master/turtle.tmLanguage.JSON
 
         this.$rules = {
             start: [
@@ -19,8 +29,6 @@ export class CustomHighlightRules extends ace.acequire(
                 },
                 {
                     comment: 'URI',
-                    // Best attempt to convert IRI_REF:
-                    // http://www.w3.org/TR/rdf-sparql-query/#rIRI_REF
                     regex: '<[^<>"{}|^`\\]\\\\]*>',
                     token: 'string.uri.turtle'
                 },
@@ -39,8 +47,6 @@ export class CustomHighlightRules extends ace.acequire(
                         2: { token: 'entity.name.class.turtle' }
                     },
                     comment: 'Prefix / prefixed URI',
-                    // PN_CHARS_BASE is insane
-                    // http://www.w3.org/TR/rdf-sparql-query/#rPN_CHARS_BASE
                     regex: '(\\w*:)([^\\s|/^*?+{}()]*)',
                     token: 'constant.complex.turtle'
                 },
@@ -57,7 +63,6 @@ export class CustomHighlightRules extends ace.acequire(
                     },
                     comment: 'Typed literal',
                     regex: '("[^"]*")(\\^\\^)(<[^<>"{}|^`\\]\\\\]*>|\\w*:[^\\s)]+)',
-                    // Note duplication of IRI_REF
                     token: 'literal.turtle'
                 },
                 {
@@ -67,15 +72,7 @@ export class CustomHighlightRules extends ace.acequire(
                         3: { token: 'support.type.turtle' }
                     },
                     comment: 'String literal',
-                    // This is an attempt to implement the following BNF combinations:
-                    // STRING_LITERAL_LONG1 | STRING_LITERAL_LONG2 | STRING_LITERAL1 | STRING_LITERAL2
-                    // Creating an incorrectly highlighted example of a triple-quoted string
-                    // turned out to be really hard, so I can't promise the first two options
-                    // are correct!
-                    //
-                    // I didn't bother with multi-line strings - I think you have to use multi-line
-                    // begin...end captures to do this in Sublime, which is quite a big change from
-                    // the regex I wrote for the SPARQL syntax.
+                    // TODO: multiline strings
                     // tslint:disable-next-line:max-line-length
                     regex: '(\'\'\'(?:(?:\'|\'\')?(?:[^\'\\\\]|\\\\[tbnrf\\"\']))*\'\'\'|"""(?:(?:"|"")?([^"\\\\]|\\\\[tbnrf\\"\']))*"""|\'(?:(?:[^\\x22\\x5C\\xA\\xD])|\\\\[tbnrf\\"\'])*\'|"(?:(?:[^\\x22\\x5C\\xA\\xD])|\\\\[tbnrf\\"\'])*"|\'\'\'.*\'\'\'|\'[^\']*\')(@[a-zA-Z-]+)?',
                     token: 'string.turtle'

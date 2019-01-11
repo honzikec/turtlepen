@@ -5,6 +5,12 @@ import Dropzone from 'react-dropzone';
 import { FileImportProps } from './../../models/FileImportProps.model';
 
 export class TurtleDropzone extends React.Component<FileImportProps, {}> {
+
+  /**
+   * Handles the upload event - reads the file and emits the content up
+   *
+   * @memberof TurtleDropzone
+   */
   public onDrop = (acceptedFiles: any, rejectedFiles: any) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       const file = acceptedFiles[0];

@@ -35,11 +35,62 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         this.exportAsFile = this.exportAsFile.bind(this);
         this.handleFileImport = this.handleFileImport.bind(this);
         this.saveStateToLocalStorage = this.saveStateToLocalStorage.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Triggers Resize on the ACE Editor when the component got updated
+     *
+     * @param {EditorChangeProps} props
+     * @memberof Editor
+     */
     public componentDidUpdate(props: EditorChangeProps) {
         this.triggerResize();
+    }
+
+    /**
+     * Validates the present turtle markup
+     *
+     * @memberof Editor
+     */
+    public validate(): void {
+        this.setState({ error: undefined });
+        this.parse().then((triples: Array<n3.Quad>) => {
+            this.setState({ triples });
+            this.props.onEditorChanged(this.state);
+        });
+    }
+
+    /**
+     * Called on every change in editor's content
+     * Updates state and runs validation
+     *
+     * @param {string} value
+     * @memberof Editor
+     */
+    public handleChange(value: string): void {
+        this.setState({ value });
+        this.validate();
+    }
+
+    /**
+     * Grabs the content of the editor, dumps it into a file and triggers download
+     *
+     * @memberof Editor
+     */
+    public exportAsFile(): void {
+        const blob = new Blob([this.state.value], { type: 'text/turtle;charset=utf-8' });
+        FileSaver.saveAs(blob, 'turtlepen_output.ttl');
+    }
+
+    /**
+     * Received from the dropzone
+     * Updates value with a new one from the imported file
+     *
+     * @param {string} result
+     * @memberof Editor
+     */
+    public handleFileImport(result: string): void {
+        this.handleChange(result);
     }
 
     public componentDidMount(): void {
@@ -55,24 +106,6 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         this.saveStateToLocalStorage();
         // remove the event handler for normal unmounting
         window.removeEventListener('beforeunload', this.saveStateToLocalStorage);
-    }
-
-    public validate(): void {
-        this.setState({ error: undefined });
-        this.parse().then((triples: Array<n3.Quad>) => {
-            this.setState({ triples });
-            this.props.onEditorChanged(this.state);
-        });
-    }
-
-    public handleChange(value: string): void {
-        this.setState({ value });
-        this.validate();
-    }
-
-    public exportAsFile(): void {
-        const blob = new Blob([this.state.value], { type: 'text/turtle;charset=utf-8' });
-        FileSaver.saveAs(blob, 'turtlepen_output.ttl');
     }
 
     public render(): JSX.Element {
@@ -137,9 +170,5 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
     private triggerResize(): void {
         this._aceEditor.current.editor.resize();
-    }
-
-    private handleFileImport(result: string): void {
-        this.handleChange(result);
     }
 }

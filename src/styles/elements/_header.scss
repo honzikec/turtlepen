@@ -14,7 +14,7 @@
     background: url('./assets/logo.svg') 1em center no-repeat;
     background-size: 11.5em auto;
     float: left;
-    transition: all .3s ease-out;
+    border: none;
     &:hover {
       transform: scale(1.025);
     }

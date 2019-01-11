@@ -10,6 +10,11 @@ export class ChartToggle extends Component<{ open: boolean, hasError: boolean, o
         this.onChartToggle = this.onChartToggle.bind(this);
     }
 
+    /**
+     * Emits the event of chart toggling
+     *
+     * @memberof ChartToggle
+     */
     public onChartToggle() {
         this.props.onChartToggled();
     }

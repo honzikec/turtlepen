@@ -5,10 +5,6 @@ import { BrowserRouter as Router, Link, NavLink } from 'react-router-dom';
 
 export class Header extends Component<{}, {}> {
 
-    public isHome(): boolean {
-        return location.pathname === '/';
-    }
-
     public render(): JSX.Element {
         return (
             <header className='header'>
@@ -35,5 +31,17 @@ export class Header extends Component<{}, {}> {
                 </nav>
             </header>
         );
+    }
+
+    /**
+     * Checks window location and returns
+     * true if it's root
+     *
+     * @private
+     * @returns {boolean}
+     * @memberof Header
+     */
+    private isHome(): boolean {
+        return location.pathname === '/';
     }
 }

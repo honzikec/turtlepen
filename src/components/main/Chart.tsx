@@ -1,15 +1,11 @@
 /* Copyright 2019 Jan Kaiser */
 
 import React, { Component, RefObject } from 'react';
+import ReactPanZoom from '@ajainarayanan/react-pan-zoom';
 import * as n3 from 'n3';
 import * as d3 from 'd3';
 import { N3Error } from './../../models/N3Error.model';
-import ReactPanZoom from '@ajainarayanan/react-pan-zoom';
-
-export interface Graph {
-    nodes: Array<any>;
-    links: Array<any>;
-}
+import { Graph } from './../../models/Graph.model';
 
 export class Chart extends Component<
     { config: { triples?: Array<n3.Quad>, error?: N3Error } },
@@ -32,6 +28,14 @@ export class Chart extends Component<
         this.zoomOut = this.zoomOut.bind(this);
     }
 
+    /**
+     * Turns the n3.Quads to a d3-compatible structure
+     * and calls a method to build the chart
+     *
+     * @param {Array<n3.Quad>} [triples]
+     * @returns {void}
+     * @memberof Chart
+     */
     public triplesToGraph(triples?: Array<n3.Quad>): void {
         if (!triples || this.props.config.error) {
             this.resetChart();
@@ -67,6 +71,12 @@ export class Chart extends Component<
 
     }
 
+    /**
+     * Resets the Chart SVG to blank
+     *
+     * @returns {void}
+     * @memberof Chart
+     */
     public resetChart(): void {
         if (this._svg === null) {
             return;
@@ -74,15 +84,20 @@ export class Chart extends Component<
         this._svg.html('');
     }
 
+    /**
+     * Builds the SVG visualisation of the TURTLE triples
+     *
+     * @param {Graph} graph
+     * @returns {void}
+     * @memberof Chart
+     */
     public setChart(graph: Graph): void {
         if (this._svg === null) {
             return;
         }
         this._svg.html('');
-        // ==================== Add Marker ====================
-        this._svg.append('svg:defs');
 
-        // ==================== Add Links ====================
+        // Add Links
         const links = this._svg.selectAll('.chart__link')
             .data(graph.links)
             .enter()
@@ -107,7 +122,7 @@ export class Chart extends Component<
             })
             .attr('stroke-width', 2);
 
-        // ==================== Add Node =====================
+        // Add Nodes
         const nodes = this._svg.selectAll('.chart__node')
             .data(graph.nodes)
             .enter()
@@ -119,7 +134,7 @@ export class Chart extends Component<
                 .attr('class', 'chart__text'))
             .attr('r', 10);
 
-        // ==================== Add Arrows ====================
+        // Add Link Arrows
         const arrows = this._svg.selectAll('.arrow')
             .data(graph.links)
             .enter()
@@ -127,7 +142,7 @@ export class Chart extends Component<
             .attr('class', 'chart__arrow')
             .attr('id', (d, i) => 'link-arrow-' + i);
 
-        // ==================== Add Link Names =====================
+        // Add Link Texts
         const linkTexts = this._svg.selectAll('.link-text')
             .data(graph.links)
             .enter()
@@ -142,7 +157,7 @@ export class Chart extends Component<
                     .attr('class', 'chart__link'))
             .text(d => d.predicate);
 
-        // ==================== Add Node Names =====================
+        // Add Node Texts
         const nodeTexts = this._svg.selectAll('.node-text')
             .data(graph.nodes)
             .enter()
@@ -163,7 +178,7 @@ export class Chart extends Component<
             .force('charge', d3.forceManyBody().strength(-30))
             .force('center', d3.forceCenter(centerTop, centerLeft));
 
-        // ==================== Force ====================
+        // Force
         force.on('tick', () => {
             nodes
                 .attr('cx', d => d.x)
@@ -172,13 +187,11 @@ export class Chart extends Component<
             arrows
                 .attr('points', '-5,0 0,5 0,-5')
                 .attr('style', d => {
-                    // some trigonometry magic to position and rotate stuff (TODO: refactor!)
+                    // some trigonometry magic to position and rotate the arrows
                     const angle = this.angle(d.target.x, d.target.y, d.source.x, d.source.y);
-                    const angleDeg = angle * 180 / Math.PI;
-                    const plusX = Math.cos(angle) * 16;
-                    const plusY = Math.sin(angle) * 16;
-                    let style = 'transform: translate(' + (d.target.x + plusX) + 'px, ' + (d.target.y + plusY) + 'px) ';
-                    style += 'rotate(' + angleDeg + 'deg);';
+                    const trf = this.getArrowTransformation(angle);
+                    let style = 'transform: translate(' + (d.target.x + trf.x) + 'px, ' + (d.target.y + trf.y) + 'px) ';
+                    style += 'rotate(' + angle * 180 / Math.PI + 'deg);';
                     return style;
                 });
 
@@ -196,6 +209,28 @@ export class Chart extends Component<
                 .attr('x2', d => d.target.x)
                 .attr('y2', d => d.target.y);
 
+        });
+    }
+
+    /**
+     * Zooms the chart in by set step
+     *
+     * @memberof Chart
+     */
+    public zoomIn(): void {
+        this.setState({
+            zoom: this.state.zoom + this._zoomStep
+        });
+    }
+
+    /**
+     * Zooms the chart out by set step
+     *
+     * @memberof Chart
+     */
+    public zoomOut(): void {
+        this.setState({
+            zoom: this.state.zoom - this._zoomStep
         });
     }
 
@@ -269,15 +304,7 @@ export class Chart extends Component<
         return theta;
     }
 
-    private zoomIn(): void {
-        this.setState({
-            zoom: this.state.zoom + this._zoomStep
-        });
-    }
-
-    private zoomOut(): void {
-        this.setState({
-            zoom: this.state.zoom - this._zoomStep
-        });
+    private getArrowTransformation(angle: number): { x: number, y: number } {
+        return { x: Math.cos(angle) * 16, y: Math.sin(angle) * 16 };
     }
 }

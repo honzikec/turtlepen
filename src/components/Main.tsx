@@ -21,10 +21,23 @@ export class Main extends Component<{}, AppState> {
     this.handleChartToggle = this.handleChartToggle.bind(this);
   }
 
+  /**
+   * Sets new editor state
+   * Called on every editor content change
+   *
+   * @param {EditorState} editorState
+   * @memberof Main
+   */
   public handleEditorChange(editorState: EditorState): void {
     this.setState(editorState);
   }
 
+  /**
+   * Sets the chart visibility state (show / hide)
+   * Called when the Chart Toggle has been clicked
+   *
+   * @memberof Main
+   */
   public handleChartToggle(): void {
     this.setState({ showChart: !this.state.showChart });
   }
