@@ -33,13 +33,8 @@ export class Chart extends Component<
     }
 
     public triplesToGraph(triples?: Array<n3.Quad>): void {
-        if (!triples) {
-            console.warn('no triples...');
-            return;
-        }
-
-        if (this.props.config.error) {
-            console.error('has error...');
+        if (!triples || this.props.config.error) {
+            this.resetChart();
             return;
         }
 
@@ -70,6 +65,13 @@ export class Chart extends Component<
 
         this.setChart(graph);
 
+    }
+
+    public resetChart(): void {
+        if (this._svg === null) {
+            return;
+        }
+        this._svg.html('');
     }
 
     public setChart(graph: Graph): void {
@@ -202,9 +204,7 @@ export class Chart extends Component<
 
         this._svg = d3.select('#svg')
             .attr('width', chartEl.clientWidth)
-            .attr('height', chartEl.clientHeight)
-            /* ugly hack to make pointer events work outside the box */
-            .attr('style', 'box-shadow : 0px -0px 10000px transparent');
+            .attr('height', chartEl.clientHeight);
 
         // initial chart draw
         if (this.props.config.triples) {
@@ -219,15 +219,41 @@ export class Chart extends Component<
     }
 
     public render(): JSX.Element {
+        let controls: JSX.Element = <React.Fragment></React.Fragment>;
+
+        if (this.props.config.error) {
+            controls =
+                <div className='chart__message'>
+                    <p>
+                        <span className='ico-invalid'></span><br />
+                        Sorry, looks like your turtle is invalid &#9785;
+                    </p>
+                </div>;
+        } else if (!this.props.config.triples || this.props.config.triples.length === 0) {
+            controls =
+                <div className='chart__message'>
+                    <p>
+                        <span className='ico-missing'></span><br />
+                        Sorry, looks like your turtle is missing &#9785;
+                    </p>
+                </div>;
+        } else {
+            controls =
+                <div className='chart__svg-controls'>
+                    <button type='button' onClick={this.zoomOut} title='Zoom out'>
+                        <span className='ico-zoom-out'></span>
+                    </button>
+                    <button type='button' onClick={this.zoomIn} title='Zoom in'>
+                        <span className='ico-zoom-in'></span>
+                    </button>
+                </div>;
+        }
         return (
             <div className='chart' id='svg-container' ref={this._chartElement}>
                 <ReactPanZoom className='chart__panzoom' zoom={this.state.zoom}>
                     <svg id='svg' className='chart__svg'></svg>
                 </ReactPanZoom>
-                <div className='chart__svg-controls'>
-                    <button type='button' onClick={this.zoomOut}><span className='ico-zoom-out'></span></button>
-                    <button type='button' onClick={this.zoomIn}><span className='ico-zoom-in'></span></button>
-                </div>
+                {controls}
             </div>
         );
     }
