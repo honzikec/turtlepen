@@ -72,10 +72,9 @@ export class CustomHighlightRules extends ace.acequire(
                         3: { token: 'support.type.turtle' }
                     },
                     comment: 'String literal',
-                    // TODO: multiline strings
                     // tslint:disable-next-line:max-line-length
-                    regex: '(\'\'\'(?:(?:\'|\'\')?(?:[^\'\\\\]|\\\\[tbnrf\\"\']))*\'\'\'|"""(?:(?:"|"")?([^"\\\\]|\\\\[tbnrf\\"\']))*"""|\'(?:(?:[^\\x22\\x5C\\xA\\xD])|\\\\[tbnrf\\"\'])*\'|"(?:(?:[^\\x22\\x5C\\xA\\xD])|\\\\[tbnrf\\"\'])*"|\'\'\'.*\'\'\'|\'[^\']*\')(@[a-zA-Z-]+)?',
-                    token: 'string.turtle'
+                    regex: '(\'\'\'(?:(?:\'|\'\')?(?:[^\'\\\\]|\\\\[\t\b\n\r\f\\\"\']))*\'\'\'|\"\"\"(?:(?:\"|\"\")?([^\"\\\\]|\\\\[\t\b\n\r\f\\\"\']))*\"\"\"|\'(?:(?:[^\x22\x5C\x0A\x0D])|\\\\[\t\b\n\r\f\\\"\'])*\'|\"(?:(?:[^\x22\x5C\x0A\x0D])|\\\\[\t\b\n\r\f\\\"\'])*\"|\'\'\'.*\'\'\'|\'[^\']*\')(@[a-zA-Z-]+)?',
+                    token: 'literal.turtle'
                 },
                 {
                     comment: 'Comments',

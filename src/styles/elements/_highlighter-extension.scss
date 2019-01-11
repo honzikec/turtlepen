@@ -1,0 +1,12 @@
+// TODO: better colors
+.ace_rdfs-type {
+  color: darken($color__green, 30%);
+}
+
+.ace_literal {
+  color: plum;
+}
+
+.ace_constant:not(.ace_complex) {
+  color: aqua !important;
+}
