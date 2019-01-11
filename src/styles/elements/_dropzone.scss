@@ -1,9 +1,15 @@
 .dropzone {
-  height: 4em;
-  margin: .5em 2em;
-  padding: .5em 2em;
-  box-sizing: border-box;
-  border: 1px dashed lighten($color__borders, 10%);
-  color: white;
-  // background: red;
+    @extend .button;
+    width: 25em;
+    padding-left: 3em;
+    &--active {
+        @extend .dropzone;
+        border: 1px dashed $color__green;
+        color: $color__green;
+    }
+    &--error {
+        @extend .dropzone;
+        border: 1px dashed $color__red;
+        color: $color__red;
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright 2018 Jan Kaiser */
+/* Copyright 2019 Jan Kaiser */
 
 import { EditorState } from './EditorState.model';
 

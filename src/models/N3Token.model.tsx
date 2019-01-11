@@ -1,4 +1,4 @@
-/* Copyright 2018 Jan Kaiser */
+/* Copyright 2019 Jan Kaiser */
 
 export interface N3Token {
     line: number;

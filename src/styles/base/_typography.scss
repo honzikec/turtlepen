@@ -1,0 +1,51 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0 0 .5em 0;
+  margin: 1.5em 0 .5em 0;
+  font-weight: normal;
+  border-bottom: 1px solid darken($color__light, 45%);
+}
+
+h1 {
+  font-size: em-calc(22px);
+  margin-top: 0;
+}
+
+h2 {
+  font-size: em-calc(17px);
+}
+
+h3 {
+  font-size: em-calc(16px);
+}
+
+h4 {
+  font-size: em-calc(15px);
+}
+
+h5 {
+  font-size: em-calc(14px);
+}
+
+h6 {
+  font-size: em-calc(14px);
+}
+
+p {
+  line-height: 1.6em;
+}
+
+a {
+  color: darken($color__green, 25%);
+  text-decoration: none;
+  border-bottom: 1px solid darken($color__green, 25%);
+  transition: all .3s ease-out;
+  &:hover {
+    color: $color__green;
+    border-bottom-color: $color__green;
+  }
+}

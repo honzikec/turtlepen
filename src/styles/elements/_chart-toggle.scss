@@ -1,12 +1,38 @@
 .chart-toggle {
+  display: block;
+  cursor: pointer;
+  width: 3em;
+  height: calc(100% - 6.5em);
+  margin-top: 1em;
+  float: left;
+  background: $color__borders;
+  box-sizing: border-box;
+  border-right: 1px solid darken($color__dark, 6%);
+  position: relative;
+  color: lighten($color__light, 25%);
+  transition: all .3s ease-out;
+  [class^="ico-"],
+  [class*=" ico-"] {
+    position: absolute;
+    left: .25em;
+    font-size: em-calc(22px);
+  }
+  &:after {
+    content: '';
     display: block;
-    cursor: pointer;
-    width: 3em;
-    height: calc(100% - 7em);
-    margin-top: 1em;
-    float: left;
-    background: $color__borders;
-    box-sizing: border-box;
-    border-left: 1px solid darken($color__header, 6%);
-    border-right: 1px solid darken($color__header, 6%);
+    position: absolute;
+    left: 0;
+    top: 1.8em;
+    bottom: 0;
+    width: 1px;
+    background: darken($color__dark, 6%);
+  }
+  &--has-error {
+    &:after {
+      bottom: 1.8em;
+    }
+  }
+  &:hover {
+    color: $color__green;
+  }
 }

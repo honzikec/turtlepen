@@ -1,14 +1,14 @@
-/* Copyright 2018 Jan Kaiser */
+/* Copyright 2019 Jan Kaiser */
 
 import React, { Component } from 'react';
 import AceEditor from 'react-ace';
 import * as n3 from 'n3';
 
-import { TurtleEditorMode } from './../utils/TurtleEditorMode';
+import { TurtleEditorMode } from './../../utils/TurtleEditorMode';
 
-import { N3Error } from '../models/N3Error.model';
-import { EditorChangeProps } from '../models/EditorChangeProps.model';
-import { EditorState } from './../models/EditorState.model';
+import { N3Error } from './../../models/N3Error.model';
+import { EditorChangeProps } from './../../models/EditorChangeProps.model';
+import { EditorState } from './../../models/EditorState.model';
 
 import FileSaver from 'file-saver';
 
@@ -16,8 +16,6 @@ import 'brace/mode/xml';
 import 'brace/theme/twilight';
 import 'brace/ext/searchbox';
 
-// tmp
-import { initialValue } from './../models/tmpValue';
 import { TurtleDropzone } from './TurtleDropzone';
 
 export class Editor extends Component<EditorChangeProps, EditorState> {
@@ -37,11 +35,62 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         this.exportAsFile = this.exportAsFile.bind(this);
         this.handleFileImport = this.handleFileImport.bind(this);
         this.saveStateToLocalStorage = this.saveStateToLocalStorage.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Triggers Resize on the ACE Editor when the component got updated
+     *
+     * @param {EditorChangeProps} props
+     * @memberof Editor
+     */
     public componentDidUpdate(props: EditorChangeProps) {
         this.triggerResize();
+    }
+
+    /**
+     * Validates the present turtle markup
+     *
+     * @memberof Editor
+     */
+    public validate(): void {
+        this.setState({ error: undefined });
+        this.parse().then((triples: Array<n3.Quad>) => {
+            this.setState({ triples });
+            this.props.onEditorChanged(this.state);
+        });
+    }
+
+    /**
+     * Called on every change in editor's content
+     * Updates state and runs validation
+     *
+     * @param {string} value
+     * @memberof Editor
+     */
+    public handleChange(value: string): void {
+        this.setState({ value });
+        this.validate();
+    }
+
+    /**
+     * Grabs the content of the editor, dumps it into a file and triggers download
+     *
+     * @memberof Editor
+     */
+    public exportAsFile(): void {
+        const blob = new Blob([this.state.value], { type: 'text/turtle;charset=utf-8' });
+        FileSaver.saveAs(blob, 'turtlepen_output.ttl');
+    }
+
+    /**
+     * Received from the dropzone
+     * Updates value with a new one from the imported file
+     *
+     * @param {string} result
+     * @memberof Editor
+     */
+    public handleFileImport(result: string): void {
+        this.handleChange(result);
     }
 
     public componentDidMount(): void {
@@ -59,34 +108,23 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
         window.removeEventListener('beforeunload', this.saveStateToLocalStorage);
     }
 
-    public validate(): void {
-        this.setState({ error: undefined });
-        this.parse().then((triples: Array<n3.Quad>) => {
-            this.setState({ triples });
-            this.props.onEditorChanged(this.state);
-        });
-    }
-
-    public handleChange(value: string): void {
-        this.setState({ value });
-        this.validate();
-    }
-
-    public exportAsFile(): void {
-        const blob = new Blob([this.state.value], { type: 'text/turtle;charset=utf-8' });
-        FileSaver.saveAs(blob, 'turtlepen_output.ttl');
-    }
-
     public render(): JSX.Element {
         const errorMessage = this.state.error && this.state.error.message ?
-            <p className='editor__error'>{this.state.error.message}</p>
+            <div className='editor__error'><span className='ico-error'></span> {this.state.error.message}</div>
             : <React.Fragment />;
-        const editorClassName = 'editor' + (this.props.smaller ? ' editor--with-chart' : '');
+
+        const editorClassName = 'editor'
+            + (this.props.smaller ? ' editor--with-chart' : '')
+            + (this.state.error ? ' editor--has-error' : '');
+
         return (
             <div className={editorClassName}>
-                <TurtleDropzone onFileImport={this.handleFileImport} />
-                <a onClick={this.exportAsFile}>Download!!!</a>
-                {errorMessage}
+                <div className='editor__buttons'>
+                    <TurtleDropzone onFileImport={this.handleFileImport} />
+                    <button onClick={this.exportAsFile} className='button'>
+                        <span className='ico-download'></span> Export as file...
+                    </button>
+                </div>
                 <AceEditor
                     ref={this._aceEditor}
                     mode='text'
@@ -99,12 +137,12 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
                     editorProps={{ $blockScrolling: true }}
                     value={this.state.value}
                 />
+                {errorMessage}
             </div>
         );
     }
 
     private saveStateToLocalStorage(): void {
-        console.log('setting', this.state.value);
         localStorage.setItem(Editor.CURRENT_INPUT_KEY, this.state.value);
     }
 
@@ -132,9 +170,5 @@ export class Editor extends Component<EditorChangeProps, EditorState> {
 
     private triggerResize(): void {
         this._aceEditor.current.editor.resize();
-    }
-
-    private handleFileImport(result: string): void {
-        this.handleChange(result);
     }
 }
